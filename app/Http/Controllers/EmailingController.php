@@ -33,6 +33,8 @@ class EmailingController extends Controller
         else
             $clientes = Cliente::where('id_usuario_web', $user->id_usuario_web)->get();
 
-    	return view('emailing/emailing',compact('clientes'));
+        $cliente = Cliente::findOrFail($this->getIdcliente());
+
+    	return view('emailing/emailing',compact('clientes','cliente'));
     }
 }

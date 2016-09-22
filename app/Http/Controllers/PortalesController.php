@@ -47,10 +47,11 @@ class PortalesController extends Controller
         $id_cliente = $this->getIdcliente();
 
         $clientes = $this->getclientes();
+        $cliente = Cliente::findOrFail($this->getIdcliente());
 
         $portales = Portal::where('id_cliente', $id_cliente)->paginate(15);
 
-        return view('portales/portales',compact('portales', 'clientes'));
+        return view('portales/portales',compact('portales', 'clientes','cliente'));
     }
 
     public function newportal(Request $request){
@@ -60,7 +61,9 @@ class PortalesController extends Controller
 
         $clientes = $this->getclientes();
 
-        return view('portales/newportal',compact('clientes'));
+        $cliente = Cliente::findOrFail($this->getIdcliente());
+
+        return view('portales/newportal',compact('clientes','cliente'));
         
     }
 
@@ -74,7 +77,9 @@ class PortalesController extends Controller
 
         $clientes = $this->getclientes();
 
-        return view('portales/editportal',compact('portal','clientes'));
+        $cliente = Cliente::findOrFail($this->getIdcliente());
+
+        return view('portales/editportal',compact('portal','clientes','cliente'));
     }
 
     public function getportalpordefecto(){

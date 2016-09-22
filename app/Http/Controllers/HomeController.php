@@ -31,6 +31,12 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
+    public function getIdcliente(){
+
+        return Session::get('client.id_cliente');
+
+    }
+
     /**
      * Show the application dashboard.
      *
@@ -55,6 +61,8 @@ class HomeController extends Controller
 
         // }
 
-        return view('home', compact('clientes'));
+        $cliente = Cliente::findOrFail($this->getIdcliente());
+
+        return view('home', compact('clientes','cliente'));
     }
 }

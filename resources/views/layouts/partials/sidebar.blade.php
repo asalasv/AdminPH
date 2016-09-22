@@ -9,7 +9,7 @@
         <div class="user-panel" style="padding-bottom: 20px;">
             <div class="pull-left image">
                     @if(Session::has('client.logo'))
-                        <img src="{{Session::get('client.logo')}}" class="img-thumbnail" alt="User Image" />
+                        <img src='{{ asset("images/client/$cliente->logo") }}' class="img-thumbnail" alt="User Image" />
                     @else 
                         <img src="{{asset('/img/dashboard-1.jpg')}}" class="img-thumbnail" alt="User Image" />
                     @endif

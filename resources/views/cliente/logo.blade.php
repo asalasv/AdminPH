@@ -13,7 +13,7 @@ Home
 				<div class="panel-heading text-center">Logo</div>
 
 				<div class="panel-body">
-					<img src={{$logo}} alt="..." class="img-rounded center-block img-responsive">
+					<img src='{{ asset("images/client/$cliente->logo") }}' alt="..." class="img-rounded center-block img-responsive">
 				</div>
 				{!! Form::open (['route'=> ['cliente/logo'], 'method' => 'POST', 'class'=>'form-horizontal','files'=>true, 'enctype'=>'multipart/form-data']) !!}
 				<div class="box-footer">

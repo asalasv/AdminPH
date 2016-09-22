@@ -48,17 +48,18 @@ class ClientesController extends Controller
         // }
 
         if($cliente->logo){
-            $logo = base64_encode($cliente->logo);
-            $logo = 'data:image/png;base64,'.$logo;
+            //$logo = base64_encode($cliente->logo);
+            //$logo = 'data:image/png;base64,'.$logo;
 
-            Session::put('client.logo',$logo);   
+            Session::put('client.logo',$cliente->logo);   
         }
 
 
         Session::put('client.id_cliente',$id);
         Session::put('client.name',$cliente->nombre);
         Session::put('activo','1');
-        return 'Cliente seleccionado';
+
+        return Session::get('client.logo');
     }   
 
     public function imglogo()
@@ -71,32 +72,46 @@ class ClientesController extends Controller
 
         $cliente = Cliente::findOrFail($id_cliente);
 
-        $logo = base64_encode($cliente->logo);
+        //$logo = base64_encode($cliente->logo);
 
-        $logo = 'data:image/png;base64,'.$logo;
+        //$logo = 'data:image/png;base64,'.$logo;
 
         if($cliente->logo)
-            Session::put('client.logo',$logo); 
+            Session::put('client.logo',$cliente->logo);   
  
-        return view('cliente/logo',compact('logo','clientes'));
+        //return view('cliente/logo',compact('logo','clientes'));
+
+        return view('cliente/logo',compact('cliente','clientes'));
     }
 
-   public function updateimglogo(Request $request)
+    public function updateimglogo(Request $request)
     {
 
         $id_cliente = $this->getIdcliente();
 
+        $cliente = Cliente::findOrFail($id_cliente);
+
         foreach ($request->only('logo') as $logo) {
         
             if($logo){
-                $fp      = fopen($logo->getRealPath(), 'r');
-                $image = fread($fp, filesize($logo->getRealPath()));
-                $image = addslashes($image);
-                fclose($fp);
-                $sql = "UPDATE clientes 
-                        SET logo = '".$image."' 
-                        WHERE  id_cliente = ".$id_cliente;
-                $result = \DB::statement($sql);
+
+                $ext = $logo->getClientOriginalExtension();
+                $filename = uniqid().'.'.$ext;
+                $path = "images/client/";
+                $logo->move($path, $filename);
+                chmod($path . "/" . $filename, 0777);
+                $cliente->logo = $filename;
+
+                $cliente->save();
+
+                // $fp      = fopen($logo->getRealPath(), 'r');
+                // $image = fread($fp, filesize($logo->getRealPath()));
+                // $image = addslashes($image);
+                // fclose($fp);
+                // $sql = "UPDATE clientes 
+                //         SET logo = '".$image."' 
+                //         WHERE  id_cliente = ".$id_cliente;
+                // $result = \DB::statement($sql);
 
                 return redirect('cliente/logo');
             }else

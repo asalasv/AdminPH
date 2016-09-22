@@ -62,7 +62,7 @@ class SessionsController extends Controller
 
         $acti_portales = Actividad_Portales::whereIn('mac', $macs)->get();
 
-    	return view('sessions',compact('clientes', 'sesiones','acti_portales','man_mac','cliente','vivo'));
+    	return view('sessions',compact('clientes','cliente', 'sesiones','acti_portales','man_mac','cliente','vivo'));
     }
 
     public function desconectar($sesion, Request $request){
@@ -155,7 +155,7 @@ class SessionsController extends Controller
 
         $macs = Manejo_mac::where('id_equipo', $cliente->id_equipo)->get();
 
-        return view('sesiones/gestion',compact('clientes','macs','vivo'));
+        return view('sesiones/gestion',compact('clientes','cliente','macs','vivo'));
     }
 
     

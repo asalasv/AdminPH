@@ -40,7 +40,9 @@ class IndicadoresController extends Controller
 
         $clientes = $this->getclientes();
 
-        return view('indicadores/indicadores', compact('clientes'));
+        $cliente = Cliente::findOrFail($this->getIdcliente());
+
+        return view('indicadores/indicadores', compact('clientes','cliente'));
     }
 
     public function conexionesprom()

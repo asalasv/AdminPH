@@ -39,9 +39,11 @@ class SettingsController extends Controller
             return redirect('home');
         }
 
+        $cliente = Cliente::findOrFail($this->getIdcliente());
+
         $clientes = $this->getclientes();
 
-    	return view('settings/editpassword',compact('clientes'));
+    	return view('settings/editpassword',compact('clientes','cliente'));
     }
 
     public function updatepass(Request $request){

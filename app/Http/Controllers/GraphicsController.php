@@ -52,7 +52,9 @@ class GraphicsController extends Controller
 
         $clientes = $this->getclientes();
 
-        return view('graphics/lastweekreg',compact('clientes'));
+        $cliente = Cliente::findOrFail($this->getIdcliente());
+
+        return view('graphics/lastweekreg',compact('clientes','cliente'));
     }
 
     //Registros Nuevos Ultima Semana
@@ -64,7 +66,9 @@ class GraphicsController extends Controller
 
         $clientes = $this->getclientes();
 
-        return view('graphics/newlastweekreg',compact('clientes'));
+        $cliente = Cliente::findOrFail($this->getIdcliente());  
+
+        return view('graphics/newlastweekreg',compact('clientes','cliente'));
     }
 
     //Registros Nuevos Ultima Semana
@@ -140,7 +144,9 @@ class GraphicsController extends Controller
 
         $clientes = $this->getclientes();
 
-        return view('graphics/connectlastweek',compact('clientes'));
+        $cliente = Cliente::findOrFail($this->getIdcliente());
+
+        return view('graphics/connectlastweek',compact('clientes','cliente'));
     }
 
     public function getconnectlastweek()
@@ -274,7 +280,9 @@ class GraphicsController extends Controller
 
         $clientes = $this->getclientes();
 
-        return view('graphics/portalhookuserreg',compact('clientes'));
+        $cliente = Cliente::findOrFail($this->getIdcliente());
+
+        return view('graphics/portalhookuserreg',compact('clientes','cliente'));
     }
 
     //Registros Usuarios PortalHook
@@ -375,7 +383,9 @@ class GraphicsController extends Controller
 
         $clientes = $this->getclientes();
 
-        return view('graphics/sexportalhookuserreg',compact('clientes'));
+        $cliente = Cliente::findOrFail($this->getIdcliente());
+
+        return view('graphics/sexportalhookuserreg',compact('clientes','cliente'));
     }
 
     public function getsexportalhookuserreg()
@@ -512,7 +522,9 @@ class GraphicsController extends Controller
         // $man_mac = Manejo_mac::where('mac','=', $macs_array)->where('id_equipo','=', $cliente->id_equipo)->get();
 
         // return view('graphics/coneccfraudulentas',compact('clientes','macs','conexiones','man_mac'));
-         return view('graphics/coneccfraudulentas',compact('clientes','macs','conexiones'));
+
+
+         return view('graphics/coneccfraudulentas',compact('clientes', 'cliente','macs','conexiones'));
     }
 
     public function recurrenciaporc(){
@@ -522,7 +534,9 @@ class GraphicsController extends Controller
 
         $clientes = $this->getclientes();
 
-        return view('graphics/recurrenciaporc',compact('clientes'));
+        $cliente = Cliente::findOrFail($this->getIdcliente());
+
+        return view('graphics/recurrenciaporc',compact('clientes','cliente'));
 
     }
 
@@ -590,7 +604,9 @@ class GraphicsController extends Controller
 
         $clientes = $this->getclientes();
 
-        return view('graphics/dispmasconect',compact('clientes'));
+        $cliente = Cliente::findOrFail($this->getIdcliente());
+
+        return view('graphics/dispmasconect',compact('clientes','cliente'));
 
     }
 
@@ -602,14 +618,31 @@ class GraphicsController extends Controller
 
             $id_cliente = $this->getIdcliente();
 
-            $sql = "SELECT  `tipo_dispositivo` , COUNT( * ) as 'Conexiones'
-                    FROM actividad_portales
-                    WHERE  `id_cliente` = ".$id_cliente."
-                    GROUP BY  `tipo_dispositivo`";
+            // $sql = "SELECT  `tipo_dispositivo` , COUNT( * ) as 'Conexiones'
+            //         FROM actividad_portales
+            //         WHERE  `id_cliente` = ".$id_cliente."
+            //         GROUP BY  `tipo_dispositivo`";
 
-            $sql1 = "SELECT COUNT(*) as 'Conexiones_Totales' 
-                    FROM `actividad_portales` 
-                    WHERE `id_cliente` = ".$id_cliente;
+
+            $sql= "SELECT `tipo_dispositivo`, COUNT( * ) as 'Conexiones'
+                    FROM (SELECT `tipo_dispositivo` 
+                            FROM `actividad_portales` 
+                            WHERE `id_cliente`= ".$id_cliente."
+                            group by mac) as t 
+                    group by `tipo_dispositivo`";
+
+            // $sql1 = "SELECT COUNT(*) as 'Conexiones_Totales' 
+            //         FROM `actividad_portales` 
+            //         WHERE `id_cliente` = ".$id_cliente;
+
+            $sql1 = "SELECT sum(EM) as 'Conexiones_Totales'
+                    FROM (
+                        SELECT `tipo_dispositivo`, count(*) AS EM
+                        FROM (SELECT `tipo_dispositivo` 
+                            FROM `actividad_portales` 
+                            WHERE `id_cliente` = ".$id_cliente." 
+                            group by mac) as t 
+                        group by `tipo_dispositivo`) AS X ";
             
            $results = DB::select($sql); 
            $results1 = DB::select($sql1); 
@@ -622,6 +655,7 @@ class GraphicsController extends Controller
            $os = array("Apple", "Samsung", "Nokia", "HTC", "Blu", "LG");
            $otros = 0;
            $rim = 0;
+           $desktop = 0;
 
             foreach($results as $res){
                 
@@ -634,17 +668,29 @@ class GraphicsController extends Controller
                     $i++;
                 
                 }else
-                    if($res->tipo_dispositivo == "RIM" || $res->tipo_dispositivo == "Blackberry"){
+
+                    if ($res->tipo_dispositivo == "RIM") {
                         $rim = (float) $rim + (float) $res->Conexiones;
-                    }
-                    else{
+                    } elseif ($res->tipo_dispositivo == "Blackberry") {
+                        $rim = (float) $rim + (float) $res->Conexiones;
+                    } elseif ($res->tipo_dispositivo == "generic web browser") {
+                        $desktop = (float) $desktop + (float) $res->Conexiones;
+                    } elseif ($res->tipo_dispositivo == "") {
+                        $desktop = (float) $desktop + (float) $res->Conexiones;
+                    }else{
                         $otros = (float) $otros + (float) $res->Conexiones;
                     }
             }
 
             $i++;
-            $porcentajes[$i][0] = "RIM";
+            $porcentajes[$i][0] = "Blackberry";
             $porcentajes[$i][1] = (float) $rim / (float) $results1[0]->Conexiones_Totales;
+            $porcentajes[$i][1] = (float) $porcentajes[$i][1] * 100;
+            $porcentajes[$i][1] = round($porcentajes[$i][1], 2);
+
+            $i++;
+            $porcentajes[$i][0] = "Laptop";
+            $porcentajes[$i][1] = (float) $desktop / (float) $results1[0]->Conexiones_Totales;
             $porcentajes[$i][1] = (float) $porcentajes[$i][1] * 100;
             $porcentajes[$i][1] = round($porcentajes[$i][1], 2);
 
