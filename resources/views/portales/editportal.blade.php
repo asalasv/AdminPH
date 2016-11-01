@@ -19,13 +19,14 @@ Editar Portal
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
 					{!! Form::model ($portal, ['route'=> ['editportal', $portal], 'method' => 'put', 'class'=>'form-horizontal', 'files'=>true, 'enctype'=>'multipart/form-data', 'onsubmit' => 'return formulario(this)']) !!}
 					<div class="row">
-						<div class="col-xs-9">
+						<div class="col-xs-6">
 							<label class="control-label" for="date">Descripcion o nombre del portal</label>
 							<input type="text" class="form-control" name="descripcion" id="descripcion" placeholder="Nombre" value="{{$portal->descripcion}}"></input>
 						</div>
 						<div class="col-xs-3">
 							<label class="control-label" for="date">Predeterminado</label>
 							<div class="checkbox" style="margin-top: 0px;">
+								<input type="hidden" id="id" value="{{$portal->id_portal_cliente}}"></input>
 								@if($portal->predeterminado == "F")
 								<label>
 									<input type="checkbox" name="predeterminado" id="check"> Marcar si desea que este portal sea el predeterminado
@@ -33,6 +34,21 @@ Editar Portal
 								@else
 								<label>
 									<input type="checkbox" name="predeterminado" id="check" checked="checked"> Marcar si desea que este portal sea el predeterminado
+								</label>
+								@endif
+							</div>
+						</div>
+						<div class="col-xs-3">
+							<label class="control-label" for="date">Horario Parcial</label>
+							<div class="checkbox" style="margin-top: 0px;">
+								<input type="hidden" id="id" value="{{$portal->horario_parcial}}"></input>
+								@if($portal->horario_parcial == "F")
+								<label>
+									<input type="checkbox" name="horario_parcial" id="check1"> Seleccione si el horario del portal es parcial
+								</label>
+								@else
+								<label>
+									<input type="checkbox" name="horario_parcial" id="check1" checked="checked"> Seleccione si el horario del portal es parcial
 								</label>
 								@endif
 							</div>
@@ -254,6 +270,21 @@ Editar Portal
     function formulario(f) { 
 
     	if($('#check').is(':checked') == false){
+
+			var vid= $("#id").val();
+
+    		$.ajax({
+				type: "get",
+				url: "/predeterminado",
+				data: "",
+				success: function(data){
+					console.log(data);
+					if(data == vid){
+						alert ('Actualmente este es el portal predeterminado, no lo puede quitar, al menos que cree otro portal predeterminado');
+						return false; 
+					}
+				}
+			});
 
     		if(f.fecha_inicio.value == '0000-00-00' || f.fecha_fin.value == '0000-00-00' ||
     			f.fecha_inicio.value == '' || f.fecha_fin.value == ''){

@@ -98,10 +98,16 @@ Porcentaje de Recurrencia
 				});
 				var a = data.length;
 
-				for(var i=0; i<a; i++){
+				// for(var i=a-1; i>=0; i--){
+				// 	categories.push(data[i][1]);
+				// 	series.push(data[i][0]);
+				// };
+
+				for (var i=0; i<a; i++){
 					categories.push(data[i][1]);
 					series.push(data[i][0]);
-				};
+				}
+				
 				console.log('categorias');
 				console.log(categories);
 				console.log('series: ');

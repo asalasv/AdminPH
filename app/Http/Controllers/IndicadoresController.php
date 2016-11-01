@@ -13,875 +13,881 @@ use Auth;
 
 class IndicadoresController extends Controller
 {
-    
-    public function getIdcliente(){
 
-        return Session::get('client.id_cliente');
+	public function getIdcliente(){
 
-    }
+		return Session::get('client.id_cliente');
 
-    public function getclientes(){
-        $user=Auth::user();
+	}
 
-        if($user->id_usuario_web == '1' or $user->id_usuario_web == '10')
-            $clientes = Cliente::all();
-        else
-            $clientes = Cliente::where('id_usuario_web', $user->id_usuario_web)->get();
+	public function getclientes(){
+		$user=Auth::user();
 
-        return $clientes;
-    }
+		if($user->id_usuario_web == '1' or $user->id_usuario_web == '29')
+			$clientes = Cliente::all();
+		else
+			$clientes = Cliente::where('id_usuario_web', $user->id_usuario_web)->get();
+
+		return $clientes;
+	}
 
 
-    public function index()
-    {
-    	if($this->getIdcliente() == null ){
-            return redirect('home');
-        }
+	public function index()
+	{
+		if($this->getIdcliente() == null ){
+			return redirect('home');
+		}
 
-        $clientes = $this->getclientes();
+		$clientes = $this->getclientes();
 
-        $cliente = Cliente::findOrFail($this->getIdcliente());
+		$cliente = Cliente::findOrFail($this->getIdcliente());
 
-        return view('indicadores/indicadores', compact('clientes','cliente'));
-    }
+		return view('indicadores/indicadores', compact('clientes','cliente'));
+	}
 
-    public function conexionesprom()
-    {
-        if(Request::ajax()){
+	public function conexionesprom()
+	{
+		if(Request::ajax()){
 
-        	$req = Request::all();
-            $req = json_encode($req);
-            $req = json_decode($req);
+			$req = Request::all();
+			$req = json_encode($req);
+			$req = json_decode($req);
 
-            $req->cliente = ltrim($req->cliente);
+			$req->cliente = ltrim($req->cliente);
 
-            $cliente = Cliente::where('nombre', $req->cliente)->first();
+			$cliente = Cliente::where('nombre', $req->cliente)->first();
 
-            if($req->desde and $req->hasta){
+			if($req->desde and $req->hasta){
 
-                $req->desde = (new DateTime($req->desde))->format('Y-m-d');
-                $req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
+				$req->desde = (new DateTime($req->desde))->format('Y-m-d');
+				$req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
 
-                if($req->cliente == 'Todos'){
+				if($req->cliente == 'Todos'){
 
 					$sql = "SELECT * 	
-							FROM actividad_portales
-							WHERE id_cliente != 1
-							AND date_format(`fecha_actividad`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')";
+					FROM actividad_portales
+					WHERE id_cliente != 1
+					AND date_format(`fecha_actividad`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')";
 
-	            	$results = DB::select($sql);
+					$results = DB::select($sql);
 
-	            	$registros = count($results);
+					$registros = count($results);
 
-	            	$clientes = Cliente::where('id_cliente','!=','1')->count();
+					$clientes = Cliente::where('id_cliente','!=','1')->count();
 
-	            	$acti = $registros/$clientes;
+					$acti = $registros/$clientes;
 
-	            	$acti = round($acti);
+					$acti = round($acti);
 
-                	$acti = (string)$acti." <small>por Cliente</small>";
+					$acti = (string)$acti." <small>por Cliente</small>";
 
-                }else{
+				}else{
 
-            		$sql = "SELECT * 	
-							FROM actividad_portales
-							WHERE id_cliente = ".$cliente->id_cliente."
-							AND date_format(`fecha_actividad`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')
-				                GROUP BY DATE_FORMAT( fecha_actividad,  '%d-%m-%Y' ) ";
+					$sql = "SELECT * 	
+					FROM actividad_portales
+					WHERE id_cliente = ".$cliente->id_cliente."
+					AND date_format(`fecha_actividad`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')
+					GROUP BY DATE_FORMAT( fecha_actividad,  '%d-%m-%Y' ) ";
 
-	            	$results = DB::select($sql);
+					$results = DB::select($sql);
 
-	            	$dias = count($results);
+					$dias = count($results);
 
-            		$sql = "SELECT * 	
-							FROM actividad_portales
-							WHERE id_cliente = ".$cliente->id_cliente." 
-							AND date_format(`fecha_actividad`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')";
+					$sql = "SELECT * 	
+					FROM actividad_portales
+					WHERE id_cliente = ".$cliente->id_cliente." 
+					AND date_format(`fecha_actividad`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')";
 
 					$results = DB::select($sql);	
 
-	            	$registros = count($results);
-	            	
-	            	if($dias != 0)
-                		$acti = $registros/$dias;
-                	else
-                		$acti = 0;
+					$registros = count($results);
 
-                	$acti = round($acti);
+					if($dias != 0)
+						$acti = $registros/$dias;
+					else
+						$acti = 0;
 
-                	$acti = (string)$acti." <small>por Dia</small>";
-                	
-                }
+					$acti = round($acti);
 
-            }else
-                if($req->desde){
+					$acti = (string)$acti." <small>por Dia</small>";
 
-                    $req->desde = (new DateTime($req->desde))->format('Y-m-d');
+				}
 
-                    if($req->cliente == 'Todos'){
+			}else
+			if($req->desde){
 
-						$sql = "SELECT * 	
-								FROM actividad_portales
-								WHERE id_cliente != 1
-								AND date_format(`fecha_actividad`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')";
+				$req->desde = (new DateTime($req->desde))->format('Y-m-d');
 
-		            	$results = DB::select($sql);
+				if($req->cliente == 'Todos'){
 
-		            	$registros = count($results);
+					$sql = "SELECT * 	
+					FROM actividad_portales
+					WHERE id_cliente != 1
+					AND date_format(`fecha_actividad`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')";
 
-		            	$clientes = Cliente::where('id_cliente','!=','1')->count();
+					$results = DB::select($sql);
 
-		            	$acti = $registros/$clientes;
+					$registros = count($results);
 
-		            	$acti = round($acti);
+					$clientes = Cliente::where('id_cliente','!=','1')->count();
 
-                    	$acti = (string)$acti." <small>por Cliente</small>";
+					$acti = $registros/$clientes;
 
-                	}else{
+					$acti = round($acti);
 
-	            		$sql = "SELECT * 	
-								FROM actividad_portales
-								WHERE id_cliente = ".$cliente->id_cliente."
-								AND date_format(`fecha_actividad`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')
-					                GROUP BY DATE_FORMAT( fecha_actividad,  '%d-%m-%Y' ) ";
+					$acti = (string)$acti." <small>por Cliente</small>";
 
-		            	$results = DB::select($sql);
+				}else{
 
-		            	$dias = count($results);
+					$sql = "SELECT * 	
+					FROM actividad_portales
+					WHERE id_cliente = ".$cliente->id_cliente."
+					AND date_format(`fecha_actividad`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')
+					GROUP BY DATE_FORMAT( fecha_actividad,  '%d-%m-%Y' ) ";
 
-	            		$sql = "SELECT * 	
-								FROM actividad_portales
-								WHERE id_cliente = ".$cliente->id_cliente." 
-								AND date_format(`fecha_actividad`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')";
+					$results = DB::select($sql);
 
-						$results = DB::select($sql);	
+					$dias = count($results);
 
-		            	$registros = count($results);
+					$sql = "SELECT * 	
+					FROM actividad_portales
+					WHERE id_cliente = ".$cliente->id_cliente." 
+					AND date_format(`fecha_actividad`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')";
 
-		            	if($dias != 0)
-            				$acti = $registros/$dias;
-                		else
-                			$acti = 0;
+					$results = DB::select($sql);	
 
-                		$acti = round($acti);
+					$registros = count($results);
 
-                    	$acti = (string)$acti." <small>por Dia</small>";
-                	
-                	}
+					if($dias != 0)
+						$acti = $registros/$dias;
+					else
+						$acti = 0;
 
-                }else
-                    if($req->hasta){
+					$acti = round($acti);
 
-                        $req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
+					$acti = (string)$acti." <small>por Dia</small>";
 
-                        if($req->cliente == 'Todos'){
-							
-							$sql = "SELECT * 	
-									FROM actividad_portales
-									WHERE id_cliente != 1
-									AND date_format(`fecha_actividad`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')";
+				}
 
-			            	$results = DB::select($sql);
+			}else
+			if($req->hasta){
 
-			            	$registros = count($results);
+				$req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
 
-			            	$clientes = Cliente::where('id_cliente','!=','1')->count();
+				if($req->cliente == 'Todos'){
 
-			            	$acti = $registros/$clientes;
+					$sql = "SELECT * 	
+					FROM actividad_portales
+					WHERE id_cliente != 1
+					AND date_format(`fecha_actividad`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')";
 
-			            	$acti = round($acti);
+					$results = DB::select($sql);
 
-                        	$acti = (string)$acti." <small>por Cliente</small>";
+					$registros = count($results);
+
+					$clientes = Cliente::where('id_cliente','!=','1')->count();
+
+					$acti = $registros/$clientes;
+
+					$acti = round($acti);
+
+					$acti = (string)$acti." <small>por Cliente</small>";
 
 
-		                }else{
+				}else{
 
-    	            		$sql = "SELECT * 	
-									FROM actividad_portales
-									WHERE id_cliente = ".$cliente->id_cliente."
-									AND date_format(`fecha_actividad`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')
-						                GROUP BY DATE_FORMAT( fecha_actividad,  '%d-%m-%Y' ) ";
+					$sql = "SELECT * 	
+					FROM actividad_portales
+					WHERE id_cliente = ".$cliente->id_cliente."
+					AND date_format(`fecha_actividad`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')
+					GROUP BY DATE_FORMAT( fecha_actividad,  '%d-%m-%Y' ) ";
 
-			            	$results = DB::select($sql);
+					$results = DB::select($sql);
 
-			            	$dias = count($results);
+					$dias = count($results);
 
-    	            		$sql = "SELECT * 	
-									FROM actividad_portales
-									WHERE id_cliente = ".$cliente->id_cliente." 
-									AND date_format(`fecha_actividad`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')";
+					$sql = "SELECT * 	
+					FROM actividad_portales
+					WHERE id_cliente = ".$cliente->id_cliente." 
+					AND date_format(`fecha_actividad`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')";
 
-							$results = DB::select($sql);	
+					$results = DB::select($sql);	
 
-			            	$registros = count($results);
+					$registros = count($results);
 
-    		            	if($dias != 0)
-                				$acti = $registros/$dias;
-                			else
-                				$acti = 0;
+					if($dias != 0)
+						$acti = $registros/$dias;
+					else
+						$acti = 0;
 
-                			$acti = round($acti);
+					$acti = round($acti);
 
-                        	$acti = (string)$acti." <small>por Dia</small>";
-		                	
-		                }
+					$acti = (string)$acti." <small>por Dia</small>";
 
-                    }else{
+				}
 
-                        if($req->cliente == 'Todos'){
+			}else{
+
+				if($req->cliente == 'Todos'){
 
                         	// $registros = Actividad_Portales::all()->count();
 
-                        	$sql = "SELECT * FROM actividad_portales WHERE id_cliente != 1";
+					$sql = "SELECT * FROM actividad_portales WHERE id_cliente != 1";
 
-                        	$results = DB::select($sql);
+					$registros = Actividad_Portales::where('id_cliente','!=','1')->count();
 
-                        	$registros = count($results);
+					//$results = DB::select($sql);
 
-                        	$clientes = Cliente::where('id_cliente','!=','1')->count();
+					// $acti = 'hola';
 
-			            	$acti = $registros/$clientes;
+					// return $acti;
 
-			            	$acti = round($acti);
+					//$registros = count($results);
 
-                        	$acti = (string)$acti." <small>por Cliente</small>";
+					$clientes = Cliente::where('id_cliente','!=','1')->count();
+
+					$acti = $registros/$clientes;
+
+					$acti = round($acti);
+
+					$acti = (string)$acti." <small>por Cliente</small>";
 
             	   //          $registros = "Cantidad de Conexiones: <b>".(string)$registros."</b>";
 				            // $array = array($acti, $registros);
 
 				            // return $registros;
 
-		                }else{
-
-    	            		$sql = "SELECT * 	
-									FROM actividad_portales
-									WHERE id_cliente = ".$cliente->id_cliente."
-									GROUP BY DATE_FORMAT( fecha_actividad,  '%d-%m-%Y' ) ";
-
-			            	$results = DB::select($sql);
-
-			            	$dias = count($results);
-
-    	            		$sql = "SELECT * 	
-									FROM actividad_portales
-									WHERE id_cliente = ".$cliente->id_cliente;
-
-							$results = DB::select($sql);	
-
-			            	$registros = count($results);
-
-    		            	if($dias != 0)
-		                		$acti = $registros/$dias;
-		                	else
-		                		$acti = 0;
-
-		                	$acti = round($acti);
-
-                        	$acti = (string)$acti." <small>por Dia</small>";
-		                	
-		                }
-                    }
-
-            $registros = "Cantidad de Conexiones: <b>".(string)$registros."</b>";
-            $array = array($acti, $registros);
-
-            return $array;
-        }
-    }
-    
-    public function registroprom()
-    {
-        if(Request::ajax()){
-
-        	$req = Request::all();
-            $req = json_encode($req);
-            $req = json_decode($req);
-
-            $req->cliente = ltrim($req->cliente);
-
-            $cliente = Cliente::where('nombre', $req->cliente)->first();
-
-            if($req->desde and $req->hasta){
-
-                $req->desde = (new DateTime($req->desde))->format('Y-m-d');
-                $req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
-
-                if($req->cliente == 'Todos'){
+				}else{
 
 					$sql = "SELECT * 	
-							FROM registro_portales
-							WHERE id_cliente != 1
-							AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')";
+					FROM actividad_portales
+					WHERE id_cliente = ".$cliente->id_cliente."
+					GROUP BY DATE_FORMAT( fecha_actividad,  '%d-%m-%Y' ) ";
 
-	            	$results = DB::select($sql);
+					$results = DB::select($sql);
 
-	            	$registros = count($results);
+					$dias = count($results);
 
-	            	$clientes = Cliente::where('id_cliente','!=','1')->count();
-
-	            	if ($clientes != 0)
-	            		$acti = $registros/$clientes;
-	            	else
-	            		$acti = 0;
-
-	            	$acti = round($acti);
-
-                	$acti = (string)$acti." <small>por Cliente</small>";
-
-                }else{
-
-            		$sql = "SELECT * 	
-							FROM registro_portales
-							WHERE id_cliente = ".$cliente->id_cliente."
-							AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')
-				                GROUP BY date_format(`fecha_registro`,'%Y-%m-%d')";
-
-	            	$results = DB::select($sql);
-
-	            	$dias = count($results);
-
-            		$sql = "SELECT * 	
-							FROM registro_portales
-							WHERE id_cliente = ".$cliente->id_cliente." 
-							AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')";
+					$sql = "SELECT * 	
+					FROM actividad_portales
+					WHERE id_cliente = ".$cliente->id_cliente;
 
 					$results = DB::select($sql);	
 
-	            	$registros = count($results);
+					$registros = count($results);
 
-	            	if($dias != 0)
-                		$acti = $registros/$dias;
-                	else
-                		$acti = 0;
+					if($dias != 0)
+						$acti = $registros/$dias;
+					else
+						$acti = 0;
 
-                	$acti = round($acti);
+					$acti = round($acti);
 
-                	$acti = (string)$acti." <small>por Dia</small>";
-                	
-                }
+					$acti = (string)$acti." <small>por Dia</small>";
 
-            }else
-                if($req->desde){
+				}
+			}
 
-                    $req->desde = (new DateTime($req->desde))->format('Y-m-d');
+			$registros = "Cantidad de Conexiones: <b>".(string)$registros."</b>";
+			$array = array($acti, $registros);
 
-                    if($req->cliente == 'Todos'){
+			return $array;
+		}
+	}
 
-						$sql = "SELECT * 	
-								FROM registro_portales
-								WHERE id_cliente != 1
-								AND date_format(`fecha_registro`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')";
+	public function registroprom()
+	{
+		if(Request::ajax()){
 
-		            	$results = DB::select($sql);
+			$req = Request::all();
+			$req = json_encode($req);
+			$req = json_decode($req);
 
-		            	$registros = count($results);
+			$req->cliente = ltrim($req->cliente);
 
-		            	$clientes = Cliente::where('id_cliente','!=','1')->count();
+			$cliente = Cliente::where('nombre', $req->cliente)->first();
 
-		            	if ($clientes != 0)
-		            		$acti = $registros/$clientes;
-		            	else
-		            		$acti = 0;
+			if($req->desde and $req->hasta){
 
-		            	$acti = round($acti);
+				$req->desde = (new DateTime($req->desde))->format('Y-m-d');
+				$req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
 
-                    	$acti = (string)$acti." <small>por Cliente</small>";
+				if($req->cliente == 'Todos'){
 
-                	}else{
+					$sql = "SELECT * 	
+					FROM registro_portales
+					WHERE id_cliente != 1
+					AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')";
 
-	            		$sql = "SELECT * 	
-								FROM registro_portales
-								WHERE id_cliente = ".$cliente->id_cliente."
-								AND date_format(`fecha_registro`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')
-					                GROUP BY date_format(`fecha_registro`,'%Y-%m-%d')";
+					$results = DB::select($sql);
 
-		            	$results = DB::select($sql);
+					$registros = count($results);
 
-		            	$dias = count($results);
+					$clientes = Cliente::where('id_cliente','!=','1')->count();
 
-	            		$sql = "SELECT * 	
-								FROM registro_portales
-								WHERE id_cliente = ".$cliente->id_cliente." 
-								AND date_format(`fecha_registro`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')";
+					if ($clientes != 0)
+						$acti = $registros/$clientes;
+					else
+						$acti = 0;
 
-						$results = DB::select($sql);	
+					$acti = round($acti);
 
-		            	$registros = count($results);
-                    	
-		            	if($dias != 0)
-		            		$acti = $registros/$dias;
-		            	else
-		            		$acti = 0;
+					$acti = (string)$acti." <small>por Cliente</small>";
 
-		            	$acti = round($acti);
+				}else{
 
-                    	$acti = (string)$acti." <small>por Dia</small>";
-                	
-                	}
+					$sql = "SELECT * 	
+					FROM registro_portales
+					WHERE id_cliente = ".$cliente->id_cliente."
+					AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')
+					GROUP BY date_format(`fecha_registro`,'%Y-%m-%d')";
 
-                }else
-                    if($req->hasta){
+					$results = DB::select($sql);
 
-                        $req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
+					$dias = count($results);
 
-                        if($req->cliente == 'Todos'){
-							
-							$sql = "SELECT * 	
-									FROM registro_portales
-									WHERE id_cliente != 1
-									AND date_format(`fecha_registro`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')";
+					$sql = "SELECT * 	
+					FROM registro_portales
+					WHERE id_cliente = ".$cliente->id_cliente." 
+					AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')";
 
-			            	$results = DB::select($sql);
+					$results = DB::select($sql);	
 
-			            	$registros = count($results);
+					$registros = count($results);
 
-			            	$clientes = Cliente::where('id_cliente','!=','1')->count();
+					if($dias != 0)
+						$acti = $registros/$dias;
+					else
+						$acti = 0;
 
-    		            	if ($clientes != 0)
-			            		$acti = $registros/$clientes;
-			            	else
-			            		$acti = 0;
+					$acti = round($acti);
 
-			            	$acti = round($acti);
+					$acti = (string)$acti." <small>por Dia</small>";
 
-                        	$acti = (string)$acti." <small>por Cliente</small>";
+				}
 
+			}else
+			if($req->desde){
 
-		                }else{
+				$req->desde = (new DateTime($req->desde))->format('Y-m-d');
 
-    	            		$sql = "SELECT * 	
-									FROM registro_portales
-									WHERE id_cliente = ".$cliente->id_cliente."
-									AND date_format(`fecha_registro`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')
-						                GROUP BY date(`fecha_registro`)";
+				if($req->cliente == 'Todos'){
 
-			            	$results = DB::select($sql);
+					$sql = "SELECT * 	
+					FROM registro_portales
+					WHERE id_cliente != 1
+					AND date_format(`fecha_registro`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')";
 
-			            	$dias = count($results);
+					$results = DB::select($sql);
 
-    	            		$sql = "SELECT * 	
-									FROM registro_portales
-									WHERE id_cliente = ".$cliente->id_cliente." 
-									AND date_format(`fecha_registro`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')";
+					$registros = count($results);
 
-							$results = DB::select($sql);	
+					$clientes = Cliente::where('id_cliente','!=','1')->count();
 
-			            	$registros = count($results);
-                        	
-			            	if($dias != 0)
-		                		$acti = $registros/$dias;
-		                	else
-		                		$acti = 0;
+					if ($clientes != 0)
+						$acti = $registros/$clientes;
+					else
+						$acti = 0;
 
-		                	$acti = round($acti);
+					$acti = round($acti);
 
-                        	$acti = (string)$acti." <small>por Dia</small>";
-		                	
-		                }
+					$acti = (string)$acti." <small>por Cliente</small>";
 
-                    }else{
+				}else{
 
-                        if($req->cliente == 'Todos'){
+					$sql = "SELECT * 	
+					FROM registro_portales
+					WHERE id_cliente = ".$cliente->id_cliente."
+					AND date_format(`fecha_registro`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')
+					GROUP BY date_format(`fecha_registro`,'%Y-%m-%d')";
 
-                        	$registros = RegistroPortales::where('id_cliente','!=','1')->count();
+					$results = DB::select($sql);
 
-                        	$clientes = Cliente::where('id_cliente','!=','1')->count();
+					$dias = count($results);
 
-    		            	if ($clientes != 0)
-			            		$acti = $registros/$clientes;
-			            	else
-			            		$acti = 0;
+					$sql = "SELECT * 	
+					FROM registro_portales
+					WHERE id_cliente = ".$cliente->id_cliente." 
+					AND date_format(`fecha_registro`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')";
 
-			            	$acti = round($acti);
+					$results = DB::select($sql);	
 
-                        	$acti = (string)$acti." <small>por Cliente</small>";
+					$registros = count($results);
 
-		                }else{
+					if($dias != 0)
+						$acti = $registros/$dias;
+					else
+						$acti = 0;
 
-    	            		$sql = "SELECT * 	
-									FROM registro_portales
-									WHERE id_cliente = ".$cliente->id_cliente."
-									GROUP BY date_format(`fecha_registro`,'%Y-%m-%d')";
+					$acti = round($acti);
 
-			            	$results = DB::select($sql);
+					$acti = (string)$acti." <small>por Dia</small>";
 
-			            	$dias = count($results);
+				}
 
-    	            		$sql = "SELECT * 	
-									FROM registro_portales
-									WHERE id_cliente = ".$cliente->id_cliente;
+			}else
+			if($req->hasta){
 
-							$results = DB::select($sql);	
+				$req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
 
-			            	$registros = count($results);
+				if($req->cliente == 'Todos'){
 
-			            	if($dias != 0)
-		                		$acti = $registros/$dias;
-		                	else
-		                		$acti = 0;
+					$sql = "SELECT * 	
+					FROM registro_portales
+					WHERE id_cliente != 1
+					AND date_format(`fecha_registro`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')";
 
-		                	$acti = round($acti);
+					$results = DB::select($sql);
 
-                        	$acti = (string)$acti." <small>por Dia</small>";
-		                	
-		                }
-                    }
+					$registros = count($results);
 
-            $registros = "Cantidad de Conexiones: <b>".(string)$registros."</b>";
-            $array = array($acti, $registros);
+					$clientes = Cliente::where('id_cliente','!=','1')->count();
 
-            return $array;
+					if ($clientes != 0)
+						$acti = $registros/$clientes;
+					else
+						$acti = 0;
 
-        }
-    }
+					$acti = round($acti);
 
-    public function cantvisitantes()
-    {
-        if(Request::ajax()){
+					$acti = (string)$acti." <small>por Cliente</small>";
 
-        	$req = Request::all();
-            $req = json_encode($req);
-            $req = json_decode($req);
 
-            $req->cliente = ltrim($req->cliente);
+				}else{
 
-            $cliente = Cliente::where('nombre', $req->cliente)->first();
+					$sql = "SELECT * 	
+					FROM registro_portales
+					WHERE id_cliente = ".$cliente->id_cliente."
+					AND date_format(`fecha_registro`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')
+					GROUP BY date(`fecha_registro`)";
 
-            if($req->desde and $req->hasta){
+					$results = DB::select($sql);
 
-                $req->desde = (new DateTime($req->desde))->format('Y-m-d');
-                $req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
+					$dias = count($results);
 
-                if($req->cliente == 'Todos'){
+					$sql = "SELECT * 	
+					FROM registro_portales
+					WHERE id_cliente = ".$cliente->id_cliente." 
+					AND date_format(`fecha_registro`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')";
 
-			        $sql = "SELECT *, min(fecha_registro) 
-			        		FROM registro_portales 
-			        		WHERE id_cliente != 1 AND id_usuario_ph IS NULL  
-			        		AND  fecha_registro >= '".$req->desde."' AND fecha_registro <= '".$req->hasta."'
-			        		GROUP BY email";
+					$results = DB::select($sql);	
 
-	    			$results = DB::select($sql);
+					$registros = count($results);
+
+					if($dias != 0)
+						$acti = $registros/$dias;
+					else
+						$acti = 0;
+
+					$acti = round($acti);
+
+					$acti = (string)$acti." <small>por Dia</small>";
+
+				}
+
+			}else{
+
+				if($req->cliente == 'Todos'){
+
+					$registros = RegistroPortales::where('id_cliente','!=','1')->count();
+
+					$clientes = Cliente::where('id_cliente','!=','1')->count();
+
+					if ($clientes != 0)
+						$acti = $registros/$clientes;
+					else
+						$acti = 0;
+
+					$acti = round($acti);
+
+					$acti = (string)$acti." <small>por Cliente</small>";
+
+				}else{
+
+					$sql = "SELECT * 	
+					FROM registro_portales
+					WHERE id_cliente = ".$cliente->id_cliente."
+					GROUP BY date_format(`fecha_registro`,'%Y-%m-%d')";
+
+					$results = DB::select($sql);
+
+					$dias = count($results);
+
+					$sql = "SELECT * 	
+					FROM registro_portales
+					WHERE id_cliente = ".$cliente->id_cliente;
+
+					$results = DB::select($sql);	
+
+					$registros = count($results);
+
+					if($dias != 0)
+						$acti = $registros/$dias;
+					else
+						$acti = 0;
+
+					$acti = round($acti);
+
+					$acti = (string)$acti." <small>por Dia</small>";
+
+				}
+			}
+
+			$registros = "Cantidad de Conexiones: <b>".(string)$registros."</b>";
+			$array = array($acti, $registros);
+
+			return $array;
+
+		}
+	}
+
+	public function cantvisitantes()
+	{
+		if(Request::ajax()){
+
+			$req = Request::all();
+			$req = json_encode($req);
+			$req = json_decode($req);
+
+			$req->cliente = ltrim($req->cliente);
+
+			$cliente = Cliente::where('nombre', $req->cliente)->first();
+
+			if($req->desde and $req->hasta){
+
+				$req->desde = (new DateTime($req->desde))->format('Y-m-d');
+				$req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
+
+				if($req->cliente == 'Todos'){
+
+					$sql = "SELECT *, min(fecha_registro) 
+					FROM registro_portales 
+					WHERE id_cliente != 1 AND id_usuario_ph IS NULL  
+					AND  fecha_registro >= '".$req->desde."' AND fecha_registro <= '".$req->hasta."'
+					GROUP BY email";
+
+					$results = DB::select($sql);
 
 					$acti = count($results);
 
-                }else{
-                	
-                	$sql = "SELECT *, min(fecha_registro) 
-				        		FROM registro_portales 
-				        		WHERE id_cliente = ".$cliente->id_cliente." AND id_usuario_ph IS NULL 
-				        		AND  fecha_registro >= '".$req->desde."' AND fecha_registro <= '".$req->hasta."'
-				        		GROUP BY email";
+				}else{
 
-	    			$results = DB::select($sql);
+					$sql = "SELECT *, min(fecha_registro) 
+					FROM registro_portales 
+					WHERE id_cliente = ".$cliente->id_cliente." AND id_usuario_ph IS NULL 
+					AND  fecha_registro >= '".$req->desde."' AND fecha_registro <= '".$req->hasta."'
+					GROUP BY email";
+
+					$results = DB::select($sql);
 
 					$acti = count($results);
 
-                }
+				}
 
-            }else
-                if($req->desde){
+			}else
+			if($req->desde){
 
-                    $req->desde = (new DateTime($req->desde))->format('Y-m-d');
+				$req->desde = (new DateTime($req->desde))->format('Y-m-d');
 
-                    if($req->cliente == 'Todos'){
-     
-				        $sql = "SELECT *, min(fecha_registro) 
-				        		FROM registro_portales 
-				        		WHERE id_cliente != 1 AND id_usuario_ph IS NULL  
-				        		AND  fecha_registro >= '".$req->desde."'
-				        		GROUP BY email";
+				if($req->cliente == 'Todos'){
 
-		    			$results = DB::select($sql);
+					$sql = "SELECT *, min(fecha_registro) 
+					FROM registro_portales 
+					WHERE id_cliente != 1 AND id_usuario_ph IS NULL  
+					AND  fecha_registro >= '".$req->desde."'
+					GROUP BY email";
 
-						$acti = count($results);
+					$results = DB::select($sql);
 
-                	}else{
-				        $sql = "SELECT *, min(fecha_registro) 
-				        		FROM registro_portales 
-				        		WHERE id_cliente = ".$cliente->id_cliente." AND id_usuario_ph IS NULL 
-				        		AND  fecha_registro >= '".$req->desde."'
-				        		GROUP BY email";
+					$acti = count($results);
 
-		    			$results = DB::select($sql);
+				}else{
+					$sql = "SELECT *, min(fecha_registro) 
+					FROM registro_portales 
+					WHERE id_cliente = ".$cliente->id_cliente." AND id_usuario_ph IS NULL 
+					AND  fecha_registro >= '".$req->desde."'
+					GROUP BY email";
 
-						$acti = count($results);
-                	}
+					$results = DB::select($sql);
 
-                }else
-                    if($req->hasta){
+					$acti = count($results);
+				}
 
-                        $req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
+			}else
+			if($req->hasta){
 
-                        if($req->cliente == 'Todos'){
+				$req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
 
-					        $sql = "SELECT *, min(fecha_registro) 
-					        		FROM registro_portales 
-					        		WHERE id_cliente != 1 AND id_usuario_ph IS NULL  
-					        		AND  fecha_registro <= '".$req->hasta."' GROUP BY email";
+				if($req->cliente == 'Todos'){
 
-    		    			$results = DB::select($sql);
+					$sql = "SELECT *, min(fecha_registro) 
+					FROM registro_portales 
+					WHERE id_cliente != 1 AND id_usuario_ph IS NULL  
+					AND  fecha_registro <= '".$req->hasta."' GROUP BY email";
 
-    						$acti = count($results);
+					$results = DB::select($sql);
 
-		                }else{
-		                	
-					        $sql = "SELECT *, min(fecha_registro) 
-					        		FROM registro_portales 
-					        		WHERE id_cliente = ".$cliente->id_cliente." AND id_usuario_ph IS NULL 
-					        		AND  fecha_registro <= '".$req->hasta."'
-					        		GROUP BY email";
+					$acti = count($results);
 
-    		    			$results = DB::select($sql);
+				}else{
 
-    						$acti = count($results);
-		                
-		                }
+					$sql = "SELECT *, min(fecha_registro) 
+					FROM registro_portales 
+					WHERE id_cliente = ".$cliente->id_cliente." AND id_usuario_ph IS NULL 
+					AND  fecha_registro <= '".$req->hasta."'
+					GROUP BY email";
 
-                    }else{
-                        
-                        if($req->cliente == 'Todos'){
+					$results = DB::select($sql);
 
-					        $sql = "SELECT *, min(fecha_registro) 
-					        		FROM registro_portales 
-					        		WHERE id_cliente != 1 AND id_usuario_ph IS NULL  
-					        		GROUP BY email";
+					$acti = count($results);
 
-    		    			$results = DB::select($sql);
+				}
 
-    						$acti = count($results);
+			}else{
 
-		                }else{
+				if($req->cliente == 'Todos'){
 
-					        $sql = "SELECT *, min(fecha_registro) 
-					        		FROM registro_portales 
-					        		WHERE id_cliente = ".$cliente->id_cliente." AND id_usuario_ph IS NULL  
-					        		GROUP BY email";
+					$sql = "SELECT *, min(fecha_registro) 
+					FROM registro_portales 
+					WHERE id_cliente != 1 AND id_usuario_ph IS NULL  
+					GROUP BY email";
 
-    		    			$results = DB::select($sql);
+					$results = DB::select($sql);
 
-    						$acti = count($results);
-		                	
-		                }
-                    }
+					$acti = count($results);
 
-            return $acti;
-        }
-    }
+				}else{
 
-    public function cantidadregistros()
-    {
-    	if(Request::ajax()){
+					$sql = "SELECT *, min(fecha_registro) 
+					FROM registro_portales 
+					WHERE id_cliente = ".$cliente->id_cliente." AND id_usuario_ph IS NULL  
+					GROUP BY email";
 
-    		$req = Request::all();
-    		$req = json_encode($req);
-    		$req = json_decode($req);
+					$results = DB::select($sql);
 
-    		$req->cliente = ltrim($req->cliente);
+					$acti = count($results);
 
-    		$cliente = Cliente::where('nombre', $req->cliente)->first();
+				}
+			}
 
-    		if($req->desde and $req->hasta){
+			return $acti;
+		}
+	}
 
-    			$req->desde = (new DateTime($req->desde))->format('Y-m-d');
-    			$req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
+	public function cantidadregistros()
+	{
+		if(Request::ajax()){
 
-    			$sql = "SELECT * 	
-    			FROM usuarios_ph, registro_portales
-    			WHERE usuarios_ph.id_usuario_ph = registro_portales.id_usuario_ph
-    			AND registro_portales.id_cliente != 1
-    			AND date_format(registro_portales.fecha_registro,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y') Group by usuarios_ph.id_usuario_ph";
+			$req = Request::all();
+			$req = json_encode($req);
+			$req = json_decode($req);
 
-    			$results = DB::select($sql);
+			$req->cliente = ltrim($req->cliente);
 
-    			$acti = count($results);
-    		}else
+			$cliente = Cliente::where('nombre', $req->cliente)->first();
 
-	    		if($req->desde){
+			if($req->desde and $req->hasta){
 
-	    			$req->desde = (new DateTime($req->desde))->format('Y-m-d');
+				$req->desde = (new DateTime($req->desde))->format('Y-m-d');
+				$req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
 
-	    			$sql = "SELECT * 	
-	    			FROM usuarios_ph, registro_portales
-	    			WHERE usuarios_ph.id_usuario_ph = registro_portales.id_usuario_ph
-	    			AND registro_portales.id_cliente != 1
-	    			AND date_format(registro_portales.fecha_registro,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y') Group by usuarios_ph.id_usuario_ph";
+				$sql = "SELECT * 	
+				FROM usuarios_ph, registro_portales
+				WHERE usuarios_ph.id_usuario_ph = registro_portales.id_usuario_ph
+				AND registro_portales.id_cliente != 1
+				AND date_format(registro_portales.fecha_registro,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y') Group by usuarios_ph.id_usuario_ph";
 
-	    			$results = DB::select($sql);
+				$results = DB::select($sql);
 
-	    			$acti = count($results);
+				$acti = count($results);
+			}else
 
-	    		}else
+			if($req->desde){
 
-		    		if($req->hasta){
+				$req->desde = (new DateTime($req->desde))->format('Y-m-d');
 
-		    			$req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
+				$sql = "SELECT * 	
+				FROM usuarios_ph, registro_portales
+				WHERE usuarios_ph.id_usuario_ph = registro_portales.id_usuario_ph
+				AND registro_portales.id_cliente != 1
+				AND date_format(registro_portales.fecha_registro,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y') Group by usuarios_ph.id_usuario_ph";
 
-		    			$sql = "SELECT * 	
-		    			FROM usuarios_ph, registro_portales
-		    			WHERE usuarios_ph.id_usuario_ph = registro_portales.id_usuario_ph
-		    			AND registro_portales.id_cliente != 1
-		    			AND date_format(registro_portales.fecha_registro,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y') Group by usuarios_ph.id_usuario_ph";
+				$results = DB::select($sql);
 
-		    			$results = DB::select($sql);
+				$acti = count($results);
 
-		    			$acti = count($results);
+			}else
 
-		    		}else{
+			if($req->hasta){
 
-		    			$sql = "SELECT * 	
-		    			FROM usuarios_ph, registro_portales
-		    			WHERE usuarios_ph.id_usuario_ph = registro_portales.id_usuario_ph
-		    			AND registro_portales.id_cliente != 1
-		    			Group by registro_portales.id_usuario_ph";
+				$req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
 
-		    			$results = DB::select($sql);
+				$sql = "SELECT * 	
+				FROM usuarios_ph, registro_portales
+				WHERE usuarios_ph.id_usuario_ph = registro_portales.id_usuario_ph
+				AND registro_portales.id_cliente != 1
+				AND date_format(registro_portales.fecha_registro,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y') Group by usuarios_ph.id_usuario_ph";
 
-		    			$acti = count($results);
+				$results = DB::select($sql);
 
-		    		}
+				$acti = count($results);
 
-    		return $acti;
-    	}
-    }
+			}else{
 
-    public function conexfraudulentas()
-    {
-        if(Request::ajax()){
+				$sql = "SELECT * 	
+				FROM usuarios_ph, registro_portales
+				WHERE usuarios_ph.id_usuario_ph = registro_portales.id_usuario_ph
+				AND registro_portales.id_cliente != 1
+				Group by registro_portales.id_usuario_ph";
 
-        	$req = Request::all();
-            $req = json_encode($req);
-            $req = json_decode($req);
+				$results = DB::select($sql);
 
-            $req->cliente = ltrim($req->cliente);
+				$acti = count($results);
 
-            $cliente = Cliente::where('nombre', $req->cliente)->first();
+			}
 
-            if($req->desde and $req->hasta){
+			return $acti;
+		}
+	}
 
-                $req->desde = (new DateTime($req->desde))->format('Y-m-d');
-                $req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
+	public function conexfraudulentas()
+	{
+		if(Request::ajax()){
 
-                if($req->cliente == 'Todos'){
-        			$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
-				                FROM `registro_portales` 
-				                WHERE registro_portales.id_cliente != 1
-				                AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')
-				                GROUP BY `mac` 
-				                HAVING ( COUNT(*) > 2)";
+			$req = Request::all();
+			$req = json_encode($req);
+			$req = json_decode($req);
 
-                	$results = DB::select($sql);
+			$req->cliente = ltrim($req->cliente);
 
-                	$acti = count($results);
+			$cliente = Cliente::where('nombre', $req->cliente)->first();
 
-                }else{
+			if($req->desde and $req->hasta){
 
-                	$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
-				                FROM `registro_portales` 
-				                WHERE `id_cliente` = ".$cliente->id_cliente."
-				                AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')
-				                GROUP BY `mac` 
-				                HAVING ( COUNT(*) > 2)";
+				$req->desde = (new DateTime($req->desde))->format('Y-m-d');
+				$req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
 
-                	$results = DB::select($sql);
+				if($req->cliente == 'Todos'){
+					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
+					FROM `registro_portales` 
+					WHERE registro_portales.id_cliente != 1
+					AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')
+					GROUP BY `mac` 
+					HAVING ( COUNT(*) > 2)";
 
-                	$acti = count($results);
-                	
-                }
+					$results = DB::select($sql);
 
-            }else
-                if($req->desde){
+					$acti = count($results);
 
-                    $req->desde = (new DateTime($req->desde))->format('Y-m-d');
+				}else{
 
-                    if($req->cliente == 'Todos'){
+					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
+					FROM `registro_portales` 
+					WHERE `id_cliente` = ".$cliente->id_cliente."
+					AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')
+					GROUP BY `mac` 
+					HAVING ( COUNT(*) > 2)";
 
-                			$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
-						                FROM `registro_portales`
-						                WHERE registro_portales.id_cliente != 1 
-						                AND date_format(`fecha_registro`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')
-						                GROUP BY `mac` 
-						                HAVING ( COUNT(*) > 2)";
+					$results = DB::select($sql);
 
-		                	$results = DB::select($sql);
+					$acti = count($results);
 
-		                	$acti = count($results);
+				}
 
-                	}else{
+			}else
+			if($req->desde){
 
-	                	$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
-					                FROM `registro_portales` 
-					                WHERE `id_cliente` = ".$cliente->id_cliente."
-					                AND date_format(`fecha_registro`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')
-					                GROUP BY `mac` 
-					                HAVING ( COUNT(*) > 2)";
+				$req->desde = (new DateTime($req->desde))->format('Y-m-d');
 
-	                	$results = DB::select($sql);
+				if($req->cliente == 'Todos'){
 
-	                	$acti = count($results);
-                	
-                	}
+					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
+					FROM `registro_portales`
+					WHERE registro_portales.id_cliente != 1 
+					AND date_format(`fecha_registro`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')
+					GROUP BY `mac` 
+					HAVING ( COUNT(*) > 2)";
 
-                }else
-                    if($req->hasta){
+					$results = DB::select($sql);
 
-                        $req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
+					$acti = count($results);
 
-                        if($req->cliente == 'Todos'){
-        			      	$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
-						                FROM `registro_portales` 
-						                WHERE registro_portales.id_cliente != 1
-						                AND date_format(`fecha_registro`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')
-						                GROUP BY `mac` 
-						                HAVING ( COUNT(*) > 2)";
+				}else{
 
-		                	$results = DB::select($sql);
+					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
+					FROM `registro_portales` 
+					WHERE `id_cliente` = ".$cliente->id_cliente."
+					AND date_format(`fecha_registro`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')
+					GROUP BY `mac` 
+					HAVING ( COUNT(*) > 2)";
 
-		                	$acti = count($results);
+					$results = DB::select($sql);
 
-		                }else{
+					$acti = count($results);
 
-		                	$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
-						                FROM `registro_portales` 
-						                WHERE `id_cliente` = ".$cliente->id_cliente."
-						                AND date_format(fecha_registro,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')
-						                GROUP BY `mac` 
-						                HAVING ( COUNT(*) > 2)";
+				}
 
-		                	$results = DB::select($sql);
+			}else
+			if($req->hasta){
 
-		                	$acti = count($results);
-		                	
-		                }
+				$req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
 
-                    }else{
-                        
-                        if($req->cliente == 'Todos'){
+				if($req->cliente == 'Todos'){
+					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
+					FROM `registro_portales` 
+					WHERE registro_portales.id_cliente != 1
+					AND date_format(`fecha_registro`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')
+					GROUP BY `mac` 
+					HAVING ( COUNT(*) > 2)";
 
-		                	 $sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
-						                FROM `registro_portales`
-						                WHERE registro_portales.id_cliente != 1
-						                GROUP BY `mac` 
-						                HAVING ( COUNT(*) > 2)";
-		                	$results = DB::select($sql);
+					$results = DB::select($sql);
 
-		                	$acti = count($results);
+					$acti = count($results);
 
-		                }else{
+				}else{
 
-		                	$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
-						                FROM `registro_portales` 
-						                WHERE `id_cliente` = ".$cliente->id_cliente."
-						                GROUP BY `mac` 
-						                HAVING ( COUNT(*) > 2)";
+					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
+					FROM `registro_portales` 
+					WHERE `id_cliente` = ".$cliente->id_cliente."
+					AND date_format(fecha_registro,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')
+					GROUP BY `mac` 
+					HAVING ( COUNT(*) > 2)";
 
-		                	$results = DB::select($sql);
+					$results = DB::select($sql);
 
-		                	$acti = count($results);
-		                	
-		                }
-                    }
-            return $acti;
-        }
-    }
+					$acti = count($results);
+
+				}
+
+			}else{
+
+				if($req->cliente == 'Todos'){
+
+					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
+					FROM `registro_portales`
+					WHERE registro_portales.id_cliente != 1
+					GROUP BY `mac` 
+					HAVING ( COUNT(*) > 2)";
+					$results = DB::select($sql);
+
+					$acti = count($results);
+
+				}else{
+
+					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
+					FROM `registro_portales` 
+					WHERE `id_cliente` = ".$cliente->id_cliente."
+					GROUP BY `mac` 
+					HAVING ( COUNT(*) > 2)";
+
+					$results = DB::select($sql);
+
+					$acti = count($results);
+
+				}
+			}
+			return $acti;
+		}
+	}
 
 }

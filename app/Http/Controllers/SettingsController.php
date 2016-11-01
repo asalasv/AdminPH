@@ -66,7 +66,9 @@ class SettingsController extends Controller
 
         $clientes = $this->getclientes();
 
-        return view('settings/portalpassword',compact('clientes'));
+        $cliente = Cliente::findOrFail($this->getIdcliente());
+
+        return view('settings/portalpassword',compact('clientes','cliente'));
     }
 
     public function updateportalpass(Request $request){

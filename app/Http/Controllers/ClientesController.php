@@ -98,9 +98,10 @@ class ClientesController extends Controller
                 $ext = $logo->getClientOriginalExtension();
                 $filename = uniqid().'.'.$ext;
                 $path = "images/client/";
+                $path1 = "client/";
                 $logo->move($path, $filename);
                 chmod($path . "/" . $filename, 0777);
-                $cliente->logo = $filename;
+                $cliente->logo = $path1.$filename;
 
                 $cliente->save();
 

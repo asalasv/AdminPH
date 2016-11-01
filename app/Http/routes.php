@@ -152,6 +152,12 @@ Route::group(['middleware' => ['web']], function () {
 	    'as' => 'deletegroup', 
 	    'uses' => 'UsuariosController@deletegroup'
 	]);
+
+	Route::post('updatehour/',[
+	    'as' => 'updatehour', 
+	    'uses' => 'UsuariosController@updatehour'
+	]);
+
 	/*
 	|--------------------------------------------------------------------------
 	| Emailing Modulo Routes
@@ -159,6 +165,13 @@ Route::group(['middleware' => ['web']], function () {
 	*/
 
 	Route::get('/e-mailing','EmailingController@index');
+
+	Route::get('/verify-email','EmailingController@getverify');
+
+	Route::post('channge-email-verify',[
+	    'as' => 'channge-email-verify', 
+	    'uses' => 'EmailingController@verify'
+	]);
 
 	/*
 	|--------------------------------------------------------------------------
@@ -233,6 +246,8 @@ Route::group(['middleware' => ['web']], function () {
 	    'as' => 'deleteportal', 
 	    'uses' => 'PortalesController@destroy'
 	]);
+
+	Route::get('/predeterminado', 'PortalesController@predeterminado');
 
 	/*
 	|--------------------------------------------------------------------------

@@ -13,33 +13,33 @@ Home
 			<div class="box-header with-border">
 				<h3 class="box-title">Promedio de Conexiones</h3>
 				<div class="box-tools pull-right">
-		            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-		            </button>
-	            </div>	
+					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+					</button>
+				</div>	
 			</div>	
 			<div class="box-body">
 				<div class="row">
 					<form class="form-inline col-md-12" id="prom_conex">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
-								<div class="form-group">
-									<label>Cliente</label>
-									<select class="form-control input-sm cliente">
-										<option>Todos</option>
-                                        @foreach($clientes as $cliente )
-                                            <option> {{$cliente->nombre}}</option>
-                                        @endforeach
-                                    </select>
-								</div>
-								<div class="row" style="margin-left: 0px; margin-right: 0px; padding-top: 10px; padding-bottom: 10px;">
-									<div class="form-group"> <!-- Date input -->
-										<label class="control-label" for="date">Desde</label>
-										<input class="form-control" id="vdesde" name="vdesde" placeholder="MM/DD/YYY" type="text"/>
-									</div>
-									<div class="form-group"> <!-- Date input -->
-										<label class="control-label" for="date">Hasta</label>
-										<input class="form-control" id="vhasta" name="vhasta" placeholder="MM/DD/YYY" type="text"/>
-									</div>
-								</div>
+						<div class="form-group">
+							<label>Cliente</label>
+							<select class="form-control input-sm cliente">
+								<option>Todos</option>
+								@foreach($clientes as $cliente )
+								<option> {{$cliente->nombre}}</option>
+								@endforeach
+							</select>
+						</div>
+						<div class="row" style="margin-left: 0px; margin-right: 0px; padding-top: 10px; padding-bottom: 10px;">
+							<div class="form-group"> <!-- Date input -->
+								<label class="control-label" for="date">Desde</label>
+								<input class="form-control" id="vdesde" name="vdesde" placeholder="MM/DD/YYY" type="text"/>
+							</div>
+							<div class="form-group"> <!-- Date input -->
+								<label class="control-label" for="date">Hasta</label>
+								<input class="form-control" id="vhasta" name="vhasta" placeholder="MM/DD/YYY" type="text"/>
+							</div>
+						</div>
 						<button type="button" class="btn btn-success center-block prom_conex">Generar</button>
 					</form>
 				</div>
@@ -66,39 +66,39 @@ Home
 			<div class="box-header with-border">
 				<h3 class="box-title">Promedio de Registros</h3>
 				<div class="box-tools pull-right">
-		            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-		            </button>
-	            </div>	
+					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+					</button>
+				</div>	
 			</div>	
 			<div class="box-body">
 				<div class="row">
 					<form class="form-inline col-md-12" id="prom_regis">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
-								<div class="form-group">
-									<label>Cliente</label>
-									<select class="form-control input-sm cliente">>
-										<option>Todos</option>
-                                        @foreach($clientes as $cliente )
-                                            <option> {{$cliente->nombre}}</option>
-                                        @endforeach
-                                    </select>
-								</div>
-								<div class="row" style="margin-left: 0px; margin-right: 0px; padding-top: 10px; padding-bottom: 10px;">
-									<div class="form-group"> <!-- Date input -->
-										<label class="control-label" for="date">Desde</label>
-										<input class="form-control" id="vdesde" name="vdesde" placeholder="MM/DD/YYY" type="text"/>
-									</div>
-									<div class="form-group"> <!-- Date input -->
-										<label class="control-label" for="date">Hasta</label>
-										<input class="form-control" id="vhasta" name="vhasta" placeholder="MM/DD/YYY" type="text"/>
-									</div>
-								</div>
+						<div class="form-group">
+							<label>Cliente</label>
+							<select class="form-control input-sm cliente">>
+								<option>Todos</option>
+								@foreach($clientes as $cliente )
+								<option> {{$cliente->nombre}}</option>
+								@endforeach
+							</select>
+						</div>
+						<div class="row" style="margin-left: 0px; margin-right: 0px; padding-top: 10px; padding-bottom: 10px;">
+							<div class="form-group"> <!-- Date input -->
+								<label class="control-label" for="date">Desde</label>
+								<input class="form-control" id="vdesde" name="vdesde" placeholder="MM/DD/YYY" type="text"/>
+							</div>
+							<div class="form-group"> <!-- Date input -->
+								<label class="control-label" for="date">Hasta</label>
+								<input class="form-control" id="vhasta" name="vhasta" placeholder="MM/DD/YYY" type="text"/>
+							</div>
+						</div>
 						<button type="button" id="dates" class="btn btn-warning center-block prom_regis">Generar</button>
 					</form>
 				</div>
 			</div>
 			<div class="box-footer">
-			<p id="registros" style="text-align: center;">Cantidad de Registros:</p>
+				<p id="registros" style="text-align: center;">Cantidad de Registros:</p>
 				<div class="row" style="padding-top: 15px;">
 					<div class="col-md-8" style="float: none; margin: 0 auto;">
 						<div class="info-box bg-yellow" style="min-height: 70px;">
@@ -120,33 +120,33 @@ Home
 			<div class="box-header with-border">
 				<h3 class="box-title">Cantidad de Visitantes Nuevos</h3>
 				<div class="box-tools pull-right">
-		            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-		            </button>
-	            </div>	
+					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+					</button>
+				</div>	
 			</div>
 			<div class="box-body">
 				<div class="row">
 					<form class="form-inline col-md-12" id="cant_visi">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
-								<div class="form-group">
-									<label>Cliente</label>
-									<select class="form-control input-sm cliente">>
-										<option>Todos</option>
-                                        @foreach($clientes as $cliente )
-                                            <option> {{$cliente->nombre}}</option>
-                                        @endforeach
-                                    </select>
-								</div>
-								<div class="row" style="margin-left: 0px; margin-right: 0px; padding-top: 10px; padding-bottom: 10px;">
-									<div class="form-group"> <!-- Date input -->
-										<label class="control-label" for="date">Desde</label>
-										<input class="form-control" id="vdesde" name="vdesde" placeholder="MM/DD/YYY" type="text"/>
-									</div>
-									<div class="form-group"> <!-- Date input -->
-										<label class="control-label" for="date">Hasta</label>
-										<input class="form-control" id="vhasta" name="vhasta" placeholder="MM/DD/YYY" type="text"/>
-									</div>
-								</div>
+						<div class="form-group">
+							<label>Cliente</label>
+							<select class="form-control input-sm cliente">>
+								<option>Todos</option>
+								@foreach($clientes as $cliente )
+								<option> {{$cliente->nombre}}</option>
+								@endforeach
+							</select>
+						</div>
+						<div class="row" style="margin-left: 0px; margin-right: 0px; padding-top: 10px; padding-bottom: 10px;">
+							<div class="form-group"> <!-- Date input -->
+								<label class="control-label" for="date">Desde</label>
+								<input class="form-control" id="vdesde" name="vdesde" placeholder="MM/DD/YYY" type="text"/>
+							</div>
+							<div class="form-group"> <!-- Date input -->
+								<label class="control-label" for="date">Hasta</label>
+								<input class="form-control" id="vhasta" name="vhasta" placeholder="MM/DD/YYY" type="text"/>
+							</div>
+						</div>
 						<button type="button" id="dates" class="btn btn-danger center-block cant_visi">Generar</button>
 					</form>
 				</div>
@@ -173,24 +173,24 @@ Home
 			<div class="box-header with-border">
 				<h3 class="box-title">Cantidad de Usuarios Registrados</h3>
 				<div class="box-tools pull-right">
-		            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-		            </button>
-	            </div>	
+					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+					</button>
+				</div>	
 			</div>
 			<div class="box-body">
 				<div class="row">
 					<form class="form-inline col-md-12" id="cant_user">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
-								<div class="row" style="margin-left: 0px; margin-right: 0px; padding-top: 10px; padding-bottom: 10px;">
-									<div class="form-group"> <!-- Date input -->
-										<label class="control-label" for="date">Desde</label>
-										<input class="form-control" id="vdesde" name="vdesde" placeholder="MM/DD/YYY" type="text"/>
-									</div>
-									<div class="form-group"> <!-- Date input -->
-										<label class="control-label" for="date">Hasta</label>
-										<input class="form-control" id="vhasta" name="vhasta" placeholder="MM/DD/YYY" type="text"/>
-									</div>
-								</div>
+						<div class="row" style="margin-left: 0px; margin-right: 0px; padding-top: 10px; padding-bottom: 10px;">
+							<div class="form-group"> <!-- Date input -->
+								<label class="control-label" for="date">Desde</label>
+								<input class="form-control" id="vdesde" name="vdesde" placeholder="MM/DD/YYY" type="text"/>
+							</div>
+							<div class="form-group"> <!-- Date input -->
+								<label class="control-label" for="date">Hasta</label>
+								<input class="form-control" id="vhasta" name="vhasta" placeholder="MM/DD/YYY" type="text"/>
+							</div>
+						</div>
 						<button type="button" id="dates" class="btn btn-info center-block cant_user">Generar</button>
 					</form>
 				</div>
@@ -217,31 +217,31 @@ Home
 			<div class="box-header with-border">
 				<h3 class="box-title">Conexiones Fraudulentas</h3>
 				<div class="box-tools pull-right">
-		            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-		            </button>
-	            </div>	
+					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+					</button>
+				</div>	
 			</div>
 			<div class="box-body">
 				<div class="row">
 					<form class="form-inline col-md-12" id="conex_fraudu">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
-								<div class="form-group">
-									<label>Cliente</label>
-									<select class="form-control input-sm cliente">>
-										<option>Todos</option>
-                                        @foreach($clientes as $cliente )
-                                            <option> {{$cliente->nombre}}</option>
-                                        @endforeach
-                                    </select>
-								</div>
-								<div class="form-group"> <!-- Date input -->
-									<label class="control-label" for="date">Desde</label>
-									<input class="form-control" id="vdesde" name="vdesde" placeholder="MM/DD/YYY" type="text"/>
-								</div>
-								<div class="form-group"> <!-- Date input -->
-									<label class="control-label" for="date">Hasta</label>
-									<input class="form-control" id="vhasta" name="vhasta" placeholder="MM/DD/YYY" type="text"/>
-								</div>
+						<div class="form-group">
+							<label>Cliente</label>
+							<select class="form-control input-sm cliente">>
+								<option>Todos</option>
+								@foreach($clientes as $cliente )
+								<option> {{$cliente->nombre}}</option>
+								@endforeach
+							</select>
+						</div>
+						<div class="form-group"> <!-- Date input -->
+							<label class="control-label" for="date">Desde</label>
+							<input class="form-control" id="vdesde" name="vdesde" placeholder="MM/DD/YYY" type="text"/>
+						</div>
+						<div class="form-group"> <!-- Date input -->
+							<label class="control-label" for="date">Hasta</label>
+							<input class="form-control" id="vhasta" name="vhasta" placeholder="MM/DD/YYY" type="text"/>
+						</div>
 						<button type="button" id="dates" class="btn btn-navy conex_fraudu">Generar</button>
 					</form>
 				</div>
@@ -270,23 +270,83 @@ Home
     var vdesde=$('input[name="vdesde"]'); //our date input has the name "date"
     var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
     var options={
-        format: 'mm/dd/yyyy',
-        container: container,
-        todayHighlight: true,
-        autoclose: true,
+    	format: 'mm/dd/yyyy',
+    	container: container,
+    	todayHighlight: true,
+    	autoclose: true,
     };
     vdesde.datepicker(options); //initiali110/26/2015 8:20:59 PM ze plugin
     vhasta.datepicker(options); //initiali110/26/2015 8:20:59 PM ze plugin
 </script>
 
 <script type="text/javascript">
-$.ajaxSetup({
-	headers: {
-		'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-	}
-});
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
 
-$(document).ready(function(){
+	$(document).ready(function(){
+
+	//FUnciones al abrir ventana
+	var dataString = "cliente=Todos&desde=&hasta=";
+	$.ajax({
+		type: "get",
+		url: "/conexionesprom",
+		data: dataString,
+		success: function(data){	
+			console.log(data[1]);	
+			$('#conexiones').html(data[1]);
+			$('#conexprom').html(data[0]);
+		}
+	});
+	$.ajax({
+		type: "get",
+		url: "/registroprom",
+		data: dataString,
+		success: function(data){
+			$('#registros').html(data[1]);		
+			$('#regisprom').html(data[0]);
+		}
+	});
+	$.ajax({
+		type: "get",
+		url: "/registroprom",
+		data: dataString,
+		success: function(data){
+			$('#registros').html(data[1]);		
+			$('#regisprom').html(data[0]);
+		}
+	});
+	$.ajax({
+		type: "get",
+		url: "/cantvisitantes",
+		data: dataString,
+		success: function(data){	
+			console.log(data);
+			$('#cantidadvisitantes').text(data);
+		}
+	});
+	$.ajax({
+		type: "get",
+		url: "/cantidadregistros",
+		data: dataString,
+		success: function(data){	
+			console.log(data);
+			$('#cantidadusuarios').text(data);
+		}
+	});
+	$.ajax({
+		type: "get",
+		url: "/conexfraudulentas",
+		data: dataString,
+		success: function(data){			
+			console.log(data);
+			$('#conexfraudu').text(data);
+		}
+	});
+
+
 
 	$(document).ajaxStart(function () {
 		var current_effect = 'bounce'; 

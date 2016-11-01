@@ -61,8 +61,16 @@ class HomeController extends Controller
 
         // }
 
-        $cliente = Cliente::findOrFail($this->getIdcliente());
+        $id_cliente = $this->getIdcliente();
 
-        return view('home', compact('clientes','cliente'));
+        if(isset($id_cliente)){
+
+            $cliente = Cliente::findOrFail($id_cliente);
+
+            return view('home', compact('clientes','cliente'));
+
+        }
+        else
+            return view('home', compact('clientes'));
     }
 }

@@ -32,9 +32,13 @@ class SessionsController extends Controller
             return redirect('home');
         }
 
-        $salida = shell_exec('./vivo.sh '.$this->getIdcliente());
+        $salida = shell_exec('bash ./vivo.sh '.$this->getIdcliente());
+        
+        //dd($salida[0]);
         
         $vivo = $salida[0];
+
+        // $vivo = '1';
         
         shell_exec('./sesiones.sh '.$this->getIdcliente());
 
@@ -140,9 +144,11 @@ class SessionsController extends Controller
             return redirect('home');
         }
 
-        $salida = shell_exec('./vivo.sh '.$this->getIdcliente());
+        $salida = shell_exec('bash ./vivo.sh '.$this->getIdcliente());
         
         $vivo = $salida[0];
+
+       // $vivo = '1'; 
 
         shell_exec('./listado_mac.sh '.$this->getIdcliente());
 

@@ -20,7 +20,7 @@ Nuevo Portal
 
 					{!! Form::open (['route'=> 'newportal', 'method' => 'post', 'class'=>'form-horizontal', 'files'=>true, 'enctype'=>'multipart/form-data', 'onsubmit' => 'return formulario(this)']) !!}
 					<div class="row">
-						<div class="col-xs-9">
+						<div class="col-xs-6">
 							<label class="control-label" for="date">Descripcion o nombre del portal</label>
 							<input type="text" class="form-control" name="descripcion" id="descripcion" placeholder="Nombre"></input>
 						</div>
@@ -28,7 +28,15 @@ Nuevo Portal
 							<label class="control-label" for="date">Predeterminado</label>
 							<div class="checkbox" style="margin-top: 0px;">
 								<label>
-									<input type="checkbox" name="predeterminado" id="check"> Marcar si desea que este portal sea el predeterminado
+									<input type="checkbox" name="horario_parcial" id="check"> Marcar si desea que este portal sea el predeterminado
+								</label>
+							</div>
+						</div>
+						<div class="col-xs-3">
+							<label class="control-label" for="date">Horario Parcial</label>
+							<div class="checkbox" style="margin-top: 0px;">
+								<label>
+									<input type="checkbox" name="horario_parcial" id="check1">Seleccione si el horario del portal es parcial
 								</label>
 							</div>
 						</div>
@@ -79,7 +87,7 @@ Nuevo Portal
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="submit" class="btn btn-primary" id="crear">Crear Portal</button>
+				<button type="submit" class="btn btn-primary crear" id="crear">Crear Portal</button>
 			</div>
 			{!! Form::close()!!}
 
@@ -168,6 +176,18 @@ Nuevo Portal
     function formulario(f) { 
 
     	if($('#check').is(':checked') == false){
+
+    		$.ajax({
+				type: "get",
+				url: "/predeterminado",
+				data: "",
+				success: function(data){
+					if(data == 'false'){
+						alert ('Usted actualmente no posee ningun portal predeterminado, es necesario que cree uno');
+						return false; 
+					}
+				}
+			});
 
     		if(f.fecha_inicio.value == '0000-00-00' || f.fecha_fin.value == '0000-00-00' ||
     			f.fecha_inicio.value == '' || f.fecha_fin.value == ''){

@@ -223,6 +223,17 @@ class UsuariosController extends Controller
 
     }
 
+    public function updatehour(Request $request){
+
+        $sql = 'UPDATE clientes_usuarios SET `fecha_inicio` = "'.$request->fecha_inicio.'", `hora_inicio` = "'.$request->hora_inicio.'", `fecha_fin` = "'.$request->fecha_fin.'", `hora_fin` = "'.$request->hora_fin.'"   WHERE id_cliente = '.$this->getIdcliente().' AND id_usuario_ph = '.$request->id;
+        
+        $results = \DB::statement($sql);
+
+
+        return redirect('usuarios');
+
+    }
+
     // public function deletegroup($grupo, Request $request){
 
     //     $usuarios = Clientes_Usuarios::where('grupo', '=', $grupo)->where('id_cliente', '=', $this->getIdcliente())->get();

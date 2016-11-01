@@ -9,7 +9,7 @@ class Portal extends Model
     protected $table = 'portales_cliente';
 
     protected $fillable = [
-       'id_portal_cliente','id_cliente','descripcion','predeterminado','lienzo','imagen_blicidad','imagen_logo','imagen_fondo','color_fondo','fecha_inicio','fecha_fin','hora_inicio','hora_fin'
+       'id_portal_cliente','id_cliente','descripcion','predeterminado','lienzo','imagen_blicidad','imagen_logo','imagen_fondo','color_fondo','fecha_inicio','fecha_fin','hora_inicio','hora_fin','horario_parcial'
     ];
 
     public $timestamps = false;

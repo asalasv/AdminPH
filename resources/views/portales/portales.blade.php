@@ -11,6 +11,9 @@ Portales
 	<div class="col-md-12">
 		<!-- AREA CHART -->
 		<div class="box box-primary">
+			
+		</div>
+		<div class="box box-primary">
 			<div class="box-body">
 				<div class="box-header">
 					<i class='fa fa-desktop'></i><h3 class="box-title">Portales</h3>
@@ -33,11 +36,11 @@ Portales
 								<th>Fecha fin</th>
 								<th>Hora Inicio</th>
 								<th>Hora fin</th>
-								<th>Predeterminado</th>
+								<th>Tipo</th>
 							</tr>
 						</thead>
 						@foreach($portales as $portal)
-						<tr data-id="{{ $portal->id_portal_cliente}}" data-name ="{{$portal->descripcion}}">
+						<tr data-id="{{ $portal->id_portal_cliente}}" data-name ="{{$portal->descripcion}}" data-prede="{{$portal->predeterminado }}">
 							<td>{{$portal->descripcion}}</td>
 							@if($portal->fecha_inicio != '')
 								<td>{{$portal->fecha_inicio}}</td>
@@ -62,7 +65,11 @@ Portales
 							@if($portal->predeterminado == 'V')
 								<td><span class="label label-success">Predeterminado</span></td>
 							@else
-								<td>-</td>
+								@if($portal->horario_parcial == 'V')
+									<td><span class="label label-info">Parcial</span></td>
+								@else
+									<td><span class="label label-warning">Continuo</span></td>
+								@endif
 							@endif
 							<td><a href="{{ url('editportal', $portal) }}"><i class="fa fa-fw fa-edit"></i>Editar</a></td>
 							<td><a href="#" class="btn-delete"><i class="fa fa-fw fa-times"></i>Eliminar</a></td>
@@ -90,23 +97,31 @@ Portales
 			$('.btn-delete').click(function(){
 				var row = $(this).parents('tr');
 				var id = row.data('id');
+				var predeterminado = row.data('prede')
 				var form = $('#form-delete');
 				var url = form.attr('action').replace(':PORTAL_ID',id)
 				var data = form.serialize();
 
+				if (predeterminado == 'V'){
+					alert('No se puede borrar el portal predeterminado, puede cambiar otro portal a predeterminado y borrar este')
+				}else{
+					if (confirm('¿Está seguro que desea eliminar el portal "'+row.data('name')+'" de sus registros?')) {
+						$.ajax({
+							type: 'delete',
+							url: url,
+							data: data,
+							success: function(data){
+								alert(data);
+							}
+						});
 
-				if (confirm('¿Está seguro que desea eliminar el portal "'+row.data('name')+'" de sus registros?')) {
-					$.ajax({
-						type: 'delete',
-						url: url,
-						data: data,
-						success: function(data){
-							alert(data);
-						}
-					});
+						row.fadeOut();
+					}
 
-					row.fadeOut();
 				}
+
+
+
 			});
 		});
 

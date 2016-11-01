@@ -9,13 +9,13 @@
         <div class="user-panel" style="padding-bottom: 20px;">
             <div class="pull-left image">
                     @if(Session::has('client.logo'))
-                        <img src='{{ asset("images/client/$cliente->logo") }}' class="img-thumbnail" alt="User Image" />
+                        <img src='{{ asset("images/$cliente->logo") }}' class="img-thumbnail" alt="User Image" />
                     @else 
                         <img src="{{asset('/img/dashboard-1.jpg')}}" class="img-thumbnail" alt="User Image" />
                     @endif
                 
             </div>
-            <div class="pull-left info">
+            <div class="pull-left info" style="bottom: 0px;">
                 <p>{{ Auth::user()->username }} <br/>
                 <small>{{ Auth::user()->email }}</small></p>
                 <!-- Status -->
@@ -61,7 +61,11 @@
                     <li><a href="{{ url('gestion') }}"><i class="fa fa-eye"></i>Gestion de Dispositivos</a></li>
                 </ul>
             </li>
+            @if(Session::has('activo'))
+            @if( $cliente->emailing_activo == 'V' )
             <li class="treeview"><a href="{{ url('e-mailing') }}"><i class='fa fa-envelope'></i> <span>E-mailing</span></a></li>
+            @endif
+            @endif
             @if( Auth::user()->id_usuario_web == '1' or Auth::user()->id_usuario_web == '10')
             <li class="treeview"><a href="{{ url('indicadores') }}"><i class='fa fa-bar-chart'></i> <span>Indicadores</span></span></a></li>
             @endif
@@ -83,10 +87,12 @@
                             <li><a href="{{ url('cliente/logo') }}">Cambiar Imagen</a></li>
                         </ul>   
                     </li>
+                    @if( Auth::user()->id_usuario_web == '1' or Auth::user()->id_usuario_web == '10')
+                    <li><a href="{{ url('verify-email') }}"><i class='fa fa-send'></i>Emailing Masivo</a></li>
+                    <li class="treeview"><a href="{{ url('emailcertification') }}"><i class='fa fa-check-square-o'></i><span>Certificación de Emails</span></span></a></li>
+                    @endif
                 </ul>
             </li>
-            <li class="treeview"><a href="{{ url('emailcertification') }}"><i class='fa fa-certificate'></i> <span>Certificación de Emails</span></span></a></li>
-            
         </ul><!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->

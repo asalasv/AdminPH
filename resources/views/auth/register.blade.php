@@ -26,26 +26,26 @@
 
         <div class="register-box-body">
             <p class="login-box-msg">Registro de Usuario Web - Admin Dashboard</p>
-            <form id="myform" action="{{ url('/register') }}" method="post">
+            <form id="myform" action="{{ url('/register') }}" method="post" autocomplete="off" >
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="form-group has-feedback">
-                    <input type="text" class="form-control" placeholder="Username" size="20" name="username" value=""/>
+                    <input type="text" class="form-control" autocomplete="off" placeholder="Username" size="20" name="username" value=""/>
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback">
-                    <input type="email" class="form-control" placeholder="Email" name="email" value=""/>
+                    <input type="email" class="form-control" autocomplete="off" placeholder="Email" name="email" value=""/>
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback">
-                    <input type="text" class="form-control" placeholder="Cliente" name="cliente" value=""/>
+                    <input type="text" class="form-control" autocomplete="off" placeholder="Cliente" name="cliente" value=""/>
                     <span class="glyphicon glyphicon-home form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback">
-                    <input type="password" class="form-control" placeholder="Password" name="password" value="" />
+                    <input type="password" class="form-control" autocomplete="off" placeholder="Password" name="password" value="" />
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback">
-                    <input type="password" class="form-control" placeholder="Retype password" name="password_confirmation"/>
+                    <input type="password" class="form-control" autocomplete="off" placeholder="Retype password" name="password_confirmation"/>
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>
                 <div class="form-group">

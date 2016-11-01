@@ -41,13 +41,24 @@
     <script src="http://code.highcharts.com/modules/exporting.js"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.css">
+<!--     <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.css">
 
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script> -->
+
+    <!-- DATEPICKER -->
+    <link rel="stylesheet" type="text/css" href="{{ asset ('/plugins/datepicker/datepicker3.css')}}"/>
+    <script src="{{ asset ('/plugins/datepicker/bootstrap-datepicker.js')}}"></script>
 
     <!-- CLOCK PICKER -->
     <link rel="stylesheet" type="text/css" href="{{ asset ('/plugins/clockpicker-gh-pages/dist/bootstrap-clockpicker.min.css')}}"/>
     <script src="{{ asset ('/plugins/clockpicker-gh-pages/dist/bootstrap-clockpicker.min.js')}}"></script>
+
+    <!-- FULLCALENDAR -->
+    <link rel="stylesheet" type="text/css" href="{{ asset ('/plugins/fullcalendar/fullcalendar.css')}}"/>
+    <script src="{{ asset ('/plugins/fullcalendar/fullcalendar.js')}}"></script>
+
+    <!-- moment  -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
 
 </head>
 

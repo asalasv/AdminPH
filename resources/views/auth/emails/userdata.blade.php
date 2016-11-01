@@ -1,15 +1,15 @@
 {{-- resources/views/emails/userdata.blade.php --}}
 
-Hello.<br/><br/>
+¡Hola!<br/><br/>
 
-Gracias por utilizar PortalHook!<br/><br/>
+Gracias por utilizar PortalHook<br/><br/>
 
-Su usuario para administrar su Portal ha sido creado satisfactoriamente. Estas son tus credenciales:<br/><br/>
+Tu usuario para administrar el Portal de tu local comercial ha sido creado satisfactoriamente.<br/><br/>
 
 <b>Username:</b> {{ $user->username}}<br/>
 <b>Password:</b> {{$pass}}<br/><br/>
 
-Esperamos que el Dashboard de Administración sea de su agrado.<br/><br/>
+Esperamos que el Dashboard de Administración sea de tu agrado.<br/><br/>
 
 Feliz Dia.<br/><br/>
 
