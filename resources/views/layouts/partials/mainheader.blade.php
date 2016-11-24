@@ -20,7 +20,6 @@
             <ul class="nav navbar-nav">
                 @if (Auth::guest())
                     <li><a href="{{ url('/login') }}">Login</a></li>
-                    <li><a href="{{ url('/register') }}">Register</a></li>
                 @else
                     <li> <a href="{{ url('/logout') }}"><i class="fa fa-sign-out fa-5px"></i>Logout</a></li>
                 @endif

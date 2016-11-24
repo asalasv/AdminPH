@@ -9,7 +9,8 @@
 
 	<div class="row">
 		<div class="col-md-12">
-			<div class="box">
+      @if( Auth::user()->id_usuario_web == '1' or Auth::user()->id_usuario_web == '29')
+				<div class="box">
 				<div class="box-header with-border">
 					<i class="fa fa-cog"></i><h3 class="box-title">Tipo de cliente</h3>
 
@@ -35,21 +36,22 @@
 					<div class="col-xs-3">
 						<button type="button" id="cambiar" class="btn btn-block btn-primary btn-sm">
 							@if($cliente->privado == 'V')
-							Cambiar a Público
+								Cambiar a Público
 							@else
-							Cambiar a Privado
+								Cambiar a Privado
 							@endif
 						</button>
 					</div>
-					
+
 				</div>
 				<!-- /.box-footer-->
 			</div>
+			@endif
 			<!-- AREA CHART -->
 			<div class="box box-primary" id="usertable">
 
 				<div class="box-header">
-					<i class='fa fa-users'></i><h3 class="box-title" style="padding-right: 25;">Usuarios</h3>
+					<i class='fa fa-users'></i><h3 class="box-title" style="padding-right: 25;">Gestion de Usuarios</h3>
 					<div class="box-tools">
 						<div class="input-group" style="width: 50px;">
 							<!-- Button trigger modal -->
@@ -73,7 +75,7 @@
 								<li role="presentation"><a role="menuitem" id="deshabilitar" tabindex="-1" href="#"><i class="fa fa-ban"></i>Deshabilitar</a></li>
 								<li role="presentation"><a role="menuitem" id="borrar" tabindex="-1" href="#"><i class='fa fa-trash'></i>Eliminar</a></li>
 							</ul>
-							
+
 							<button type="button" id="grupos" class="btn btn-default btn-xs" data-toggle="modal" data-target="#Group"><i class='fa fa-group'></i>&nbsp;Grupos</button>
 						</div>
 					</div>
@@ -127,7 +129,7 @@
 								<td><span class="label label-danger">Bloqueado por PortalHook</span></td>
 								@elseif($user->status == '3')
 								<td><span class="label label-warning">Dado de baja</span></td>
-								@endif 
+								@endif
 								<td><a href="#" class="horario" data-toggle="modal" data-target="#Horario"><i class="fa fa-fw fa-clock-o"></i></i>Horario de Uso</a></td>
 								@endforeach
 							</table>
@@ -137,7 +139,7 @@
 					</div>
 					<!-- /.box -->
 				</div>
-			</div>			
+			</div>
 
 			<!-- Modal -->
 			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -181,11 +183,11 @@
 								<p class="help-block" id="bad-mess" style="color:red;"></p>
 								<p class="help-block" id="good-mess"></p>
 							</div>
-							<div class="box-tools pull-right"> 
+							<div class="box-tools pull-right">
 								<button data-toggle="modal" data-target="#NewGroup" type="button" class="btn btn-block btn-primary btn-sm creargrupo" style="margin-bottom: 5px;">
 									<i class="fa fa-user-plus"></i>&nbsp;Crear Grupo
 								</button>
-							</div>							
+							</div>
 							<table class="table table-hover" id="table">
 								<thead>
 									<tr>
@@ -219,11 +221,11 @@
 							<div class="row col-xs-9">
 								<p class="help-block">Para crear un grupo debe seleccionar al menos un usuario</p>
 							</div>
-							<div class="box-tools pull-right"> 
+							<div class="box-tools pull-right">
 								<button data-toggle="modal" data-target="#NewGroup" type="button" class="btn btn-block btn-primary btn-sm creargrupo" style="margin-bottom: 5px;">
 									<i class="fa fa-user-plus"></i>&nbsp;Crear Grupo
 								</button>
-							</div>							
+							</div>
 							<table class="table table-hover">
 								<thead>
 									<tr data-name="header">
@@ -296,7 +298,7 @@
 										<input class="form-control datepick" id="fecha_fin" name="fecha_fin" placeholder="MM/DD/YYY" type="text"/>
 									</div>
 								</div>
-							</div>	
+							</div>
 							<div class="row" style="padding-top: 10px;">
 								<div class="form col-xs-6">
 									<label class="control-label" for="date"><i class="fa fa-clock-o"></i>&nbsp;Hora Inicio</label>
@@ -383,18 +385,18 @@
 
     		var row = $(this).parents('tr');
 			var id = row.data('id');
-		    var fecha_inicio = $(this).closest("tr")   // Finds the closest row <tr> 
+		    var fecha_inicio = $(this).closest("tr")   // Finds the closest row <tr>
                        .find(".fecha_inic")     // Gets a descendent with class="nr"
                        .text();         // Retrieves the text within <td>
-   		    var hora_inicio = $(this).closest("tr")   // Finds the closest row <tr> 
+   		    var hora_inicio = $(this).closest("tr")   // Finds the closest row <tr>
                    .find(".hora_inic")     // Gets a descendent with class="nr"
                    .text();         // Retrieves the text within <td>
-   		    var fecha_fin = $(this).closest("tr")   // Finds the closest row <tr> 
+   		    var fecha_fin = $(this).closest("tr")   // Finds the closest row <tr>
                    .find(".fecha_fi")     // Gets a descendent with class="nr"
                    .text();         // Retrieves the text within <td>
-   		    var hora_fin = $(this).closest("tr")   // Finds the closest row <tr> 
+   		    var hora_fin = $(this).closest("tr")   // Finds the closest row <tr>
                    .find(".hora_fi")     // Gets a descendent with class="nr"
-                   .text();   
+                   .text();
 
            $("#fecha_inicio").val( fecha_inicio );
            $("#hora_inicio").val( hora_inicio );
@@ -402,13 +404,13 @@
            $("#hora_fin").val( hora_fin );
            $("#id_user").val( id );
            console.log( $("#id_user").val());
-       });	
+       });
 
     	$('.close').prop('disabled', false);
 			// $('close').prop('disabled', false);
 
 			$("#table tr").click(function(){
-				$(this).addClass('active').siblings().removeClass('active');    
+				$(this).addClass('active').siblings().removeClass('active');
 				var value=$(this).find('td:first').html();
 			});
 
@@ -606,7 +608,7 @@
 							success: function(data){
 								window.location.reload();
 							}
-						});	
+						});
 					}
 				}
 			});
@@ -629,7 +631,7 @@
 						success: function(data){
 							window.location.reload();
 						}
-					});	
+					});
 				}
 			});
 
@@ -653,7 +655,7 @@
 						success: function(data){
 							window.location.reload();
 						}
-					});	
+					});
 
 				});
 
@@ -671,7 +673,7 @@
 			// 		success: function(data){
 			// 			window.location.reload();
 			// 		}
-			// 	});	
+			// 	});
 
 			// });
 
@@ -696,7 +698,7 @@
 						success: function(data){
 							window.location.reload();
 						}
-					});	
+					});
 				// }
 			});
 
@@ -798,7 +800,7 @@
 
 		});
 
-	function getselectedrows() { 
+	function getselectedrows() {
 		var selectedIds = [];
 
 		$(":checked").each(function() {
@@ -815,13 +817,13 @@
 		return selectedIds;
 	}
 
-    function formulario(f) { 
+    function formulario(f) {
 		if(f.fecha_inicio.value == '0000-00-00' || f.fecha_fin.value == '0000-00-00' ||
 			f.fecha_inicio.value == '' || f.fecha_fin.value == ''){
 			alert ('Ningun campo fecha puede ser 0000-00-00 o vacio');
 			f.fecha_inicio.focus();
 			f.fecha_fin.focus();
-			return false; 
+			return false;
 		}
 		//COMPARACION DE QUE LA FECHA FIN NO SEA MENOR A LA FECHA INICIO
 		var fecha1 = f.fecha_inicio.value.replace(/-/g , "/");
@@ -868,7 +870,7 @@
 				return false;
 			}
 		}
-	
+
 
 		if(f.fecha_inicio.value == f.fecha_fin.value){
 			var inicio = f.hora_inicio.value.split(':');
@@ -895,4 +897,3 @@
 </script>
 
 @endsection
-

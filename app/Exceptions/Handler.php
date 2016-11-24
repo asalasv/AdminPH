@@ -17,6 +17,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
+        'Symfony\Component\HttpKernel\Exception\HttpException',
         AuthorizationException::class,
         HttpException::class,
         ModelNotFoundException::class,
@@ -44,8 +45,9 @@ class Handler extends ExceptionHandler
      * @return \Illuminate\Http\Response
      */
     public function render($request, Exception $e) {
-        if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException)
-            return redirect('/');
+        if ($e instanceof TokenMismatchException)
+        return redirect($request->fullUrl())->with('csrf_error',"Opps! Seems you couldn't submit form for a longtime. Please try again");
+            //return redirect('/');
             // return response(view('errors.404'), 404);
 
         return parent::render($request, $e);

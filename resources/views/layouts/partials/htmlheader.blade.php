@@ -34,11 +34,12 @@
     <link type="text/css" rel="stylesheet" href="{{ asset('/plugins/waitMe/waitMe.css') }}"/>
 
     <!-- Highchart core JavaScript -->
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ asset('/plugins/jQuery/jquery-1.8.2.min.js')}}"></script>
+    <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> -->
     <!-- <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script> -->
     <script src="{{ asset ('/plugins/Highcharts-4.2.3/js/highcharts.js') }}"></script>
-   <!-- <script src="{{ asset ('/plugins/Highcharts-4.2.3/js/modules/exporting.js') }}"></script> -->
-    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+   <script src="{{ asset ('/plugins/Highcharts-4.2.3/js/modules/exporting.js') }}"></script>
+    <!-- <script src="http://code.highcharts.com/modules/exporting.js"></script> -->
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <!--     <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.css">
@@ -53,13 +54,19 @@
     <link rel="stylesheet" type="text/css" href="{{ asset ('/plugins/clockpicker-gh-pages/dist/bootstrap-clockpicker.min.css')}}"/>
     <script src="{{ asset ('/plugins/clockpicker-gh-pages/dist/bootstrap-clockpicker.min.js')}}"></script>
 
-    <!-- FULLCALENDAR -->
-    <link rel="stylesheet" type="text/css" href="{{ asset ('/plugins/fullcalendar/fullcalendar.css')}}"/>
-    <script src="{{ asset ('/plugins/fullcalendar/fullcalendar.js')}}"></script>
+
 
     <!-- moment  -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
+    <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script> -->
+
+    <!-- PASSWORD EYE -->
+    <link rel="stylesheet" type="text/css" href="{{ asset ('plugins/inputShowPwd/css/inputShowPwd.css')}}"/>
+    <script src="{{ asset ('/plugins/inputShowPwd/js/inputShowPwd.js')}}"></script>
+
+    <script type="text/javascript"> //<![CDATA[
+    var tlJsHost = ((window.location.protocol == "https:") ? "https://secure.comodo.com/" : "http://www.trustlogo.com/");
+    document.write(unescape("%3Cscript src='" + tlJsHost + "trustlogo/javascript/trustlogo.js' type='text/javascript'%3E%3C/script%3E"));
+    //]]>
+    </script>
 
 </head>
-
-

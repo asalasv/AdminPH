@@ -14,6 +14,15 @@
 
 Route::post('password/email','Auth\PasswordController@postEmail');
 
+Route::get('contract/premium','Auth\AuthController@getPremium');
+
+Route::get('contract/basic','Auth\AuthController@getBasic');
+
+Route::get('verifyusername/{user}',[
+		'as' => 'verifyusername',
+		'uses' => 'Auth\AuthController@verifyusername'
+]);
+
 Route::group(['middleware' => ['web']], function () {
 
 	/*
@@ -67,29 +76,29 @@ Route::group(['middleware' => ['web']], function () {
 	Route::get('sesiones','SessionsController@index');
 
 	Route::post('desconectar/{sesion}',[
-	    'as' => 'desconectar', 
+	    'as' => 'desconectar',
 	    'uses' => 'SessionsController@desconectar'
 	]);
 
 	Route::post('bloquear/{mac}/{sesion}/{descr}',[
-	    'as' => 'bloquear', 
+	    'as' => 'bloquear',
 	    'uses' => 'SessionsController@bloquear'
 	]);
 
 	Route::post('desblock/{mac}/{orden}',[
-	    'as' => 'desblock', 
+	    'as' => 'desblock',
 	    'uses' => 'SessionsController@desblock'
 	]);
 
 	Route::post('habilitar/{mac}',[
-	    'as' => 'habilitar', 
+	    'as' => 'habilitar',
 	    'uses' => 'SessionsController@habilitar'
 	]);
 
 	Route::get('gestion','SessionsController@gestionindex');
 
-	Route::post('bloqueodesbloqueo/{mac}/{act}/{descr}',[
-	    'as' => 'bloqueodesbloqueo', 
+	Route::post('bloqueodesbloqueo/{mac}/{act}/{descr}/{orden}',[
+	    'as' => 'bloqueodesbloqueo',
 	    'uses' => 'SessionsController@bloqueodesbloqueo'
 	]);
 
@@ -102,19 +111,19 @@ Route::group(['middleware' => ['web']], function () {
 
 	Route::get('/usuarios','UsuariosController@index');
 	Route::post('/postusuario/{email}',[
-	    'as' => 'postusuario', 
+	    'as' => 'postusuario',
 	    'uses' => 'UsuariosController@add'
 	]);
 	Route::delete('deleteusuario/{id}',[
-	    'as' => 'deleteusuario', 
+	    'as' => 'deleteusuario',
 	    'uses' => 'UsuariosController@destroy'
 	]);
 	Route::get('verifyemail/{email}',[
-	    'as' => 'verifyemail', 
+	    'as' => 'verifyemail',
 	    'uses' => 'UsuariosController@verifyemail'
 	]);
 	Route::post('changestatus',[
-	    'as' => 'changestatus', 
+	    'as' => 'changestatus',
 	    'uses' => 'UsuariosController@changestatus'
 	]);
 
@@ -124,37 +133,37 @@ Route::group(['middleware' => ['web']], function () {
 	]);
 
 	Route::post('changestatusph/{id}',[
-	    'as' => 'changestatusph', 
+	    'as' => 'changestatusph',
 	    'uses' => 'UsuariosController@changestatusph'
 	]);
 
 	Route::post('habilitarph/{id}',[
-	    'as' => 'habilitarph', 
+	    'as' => 'habilitarph',
 	    'uses' => 'UsuariosController@habilitarph'
 	]);
 
 	Route::post('inhabilitarph/{id}',[
-	    'as' => 'inhabilitarph', 
+	    'as' => 'inhabilitarph',
 	    'uses' => 'UsuariosController@inhabilitarph'
 	]);
 
 	Route::post('asignargrupo/{id}/{group}',[
-	    'as' => 'asignargrupo', 
+	    'as' => 'asignargrupo',
 	    'uses' => 'UsuariosController@asignargrupo'
 	]);
 
 	Route::post('changestatusgroup/{group}/{status}',[
-	    'as' => 'changestatusgroup', 
+	    'as' => 'changestatusgroup',
 	    'uses' => 'UsuariosController@changestatusgroup'
 	]);
 
 	Route::post('deletegroup/{group}/',[
-	    'as' => 'deletegroup', 
+	    'as' => 'deletegroup',
 	    'uses' => 'UsuariosController@deletegroup'
 	]);
 
 	Route::post('updatehour/',[
-	    'as' => 'updatehour', 
+	    'as' => 'updatehour',
 	    'uses' => 'UsuariosController@updatehour'
 	]);
 
@@ -169,7 +178,7 @@ Route::group(['middleware' => ['web']], function () {
 	Route::get('/verify-email','EmailingController@getverify');
 
 	Route::post('channge-email-verify',[
-	    'as' => 'channge-email-verify', 
+	    'as' => 'channge-email-verify',
 	    'uses' => 'EmailingController@verify'
 	]);
 
@@ -195,16 +204,16 @@ Route::group(['middleware' => ['web']], function () {
 
 	Route::get('lastweekreg', 'GraphicsController@lastweekreg');
 	Route::get('lastweekreg/get', 'GraphicsController@getlastweekreg');
-	
+
 	Route::get('newlastweekreg', 'GraphicsController@newlastweekreg');
 	Route::get('newlastweekreg/get', 'GraphicsController@getnewlastweekreg');
-	
+
 	Route::get('connectlastweek', 'GraphicsController@connectlastweek');
 	Route::get('connectlastweek/get', 'GraphicsController@getconnectlastweek');
-	
+
 	Route::get('portalhookuserreg', 'GraphicsController@portalhookuserreg');
 	Route::get('portalhookuserreg/get', 'GraphicsController@getportalhookuserreg');
-	
+
 	Route::get('sexportalhookuserreg', 'GraphicsController@sexportalhookuserreg');
 	Route::get('sexportalhookuserreg/get', 'GraphicsController@getsexportalhookuserreg');
 
@@ -226,28 +235,34 @@ Route::group(['middleware' => ['web']], function () {
 	Route::get('/portales','PortalesController@index');
 
 	Route::get('/newportal',[
-	    'as' => 'newportal', 
+	    'as' => 'newportal',
 	    'uses' => 'PortalesController@newportal'
 	]);
 	Route::post('/newportal',[
-	    'as' => 'newportal', 
+	    'as' => 'newportal',
 	    'uses' => 'PortalesController@store'
 	]);
 
 	Route::get('/editportal/{id_portal_cliente}',[
-	    'as' => 'portal', 
+	    'as' => 'portal',
 	    'uses' => 'PortalesController@editportal'
 	]);
 	Route::put('/editportal/{id_portal_cliente}',[
-	    'as' => 'editportal', 
+	    'as' => 'editportal',
 	    'uses' => 'PortalesController@update'
 	]);
 	Route::delete('/deleteportal/{id_portal_cliente}',[
-	    'as' => 'deleteportal', 
+	    'as' => 'deleteportal',
 	    'uses' => 'PortalesController@destroy'
 	]);
 
 	Route::get('/predeterminado', 'PortalesController@predeterminado');
+
+	Route::get('/manejo_portal', 'PortalesController@manejo_portal');
+	Route::put('/updatemanejo_portal',[
+			'as' => 'updatemanejo_portal',
+			'uses' => 'PortalesController@updatemanejo_portal'
+	]);
 
 	/*
 	|--------------------------------------------------------------------------
@@ -257,13 +272,13 @@ Route::group(['middleware' => ['web']], function () {
 
 	Route::get('changepass','SettingsController@changepass');
 	Route::put('/changepass',[
-	    'as' => 'changepass', 
+	    'as' => 'changepass',
 	    'uses' => 'SettingsController@updatepass'
 	]);
 
 	Route::get('portalpass','SettingsController@portalpass');
 	Route::put('/updateportalpass',[
-	    'as' => 'updateportalpass', 
+	    'as' => 'updateportalpass',
 	    'uses' => 'SettingsController@updateportalpass'
 	]);
 
@@ -287,8 +302,19 @@ Route::group(['middleware' => ['web']], function () {
  	Route::get('/emailcertification', 'CertificationEmailController@index');
 
 	Route::post('changevalidate',[
-	    'as' => 'changevalidate', 
+	    'as' => 'changevalidate',
 	    'uses' => 'CertificationEmailController@changevalidate'
 	]);
 
+	/*
+	|--------------------------------------------------------------------------
+	| Email Certification Routes
+	|--------------------------------------------------------------------------
+	*/
+	// Route::get('api','CallendarController@api'); //ruta que nos devuelve los eventos en formato json
+
+	Route::get('api',[
+	    'as' => 'api',
+	    'uses' => 'CallendarController@api'
+	]);
 });

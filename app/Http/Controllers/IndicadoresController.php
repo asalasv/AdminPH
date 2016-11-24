@@ -23,7 +23,7 @@ class IndicadoresController extends Controller
 	public function getclientes(){
 		$user=Auth::user();
 
-		if($user->id_usuario_web == '1' or $user->id_usuario_web == '29')
+		if($user->id_usuario_web == '1' or $user->id_usuario_web == '10')
 			$clientes = Cliente::all();
 		else
 			$clientes = Cliente::where('id_usuario_web', $user->id_usuario_web)->get();
@@ -50,12 +50,18 @@ class IndicadoresController extends Controller
 		if(Request::ajax()){
 
 			$req = Request::all();
+
 			$req = json_encode($req);
 			$req = json_decode($req);
 
 			$req->cliente = ltrim($req->cliente);
 
-			$cliente = Cliente::where('nombre', $req->cliente)->first();
+			if($req->cliente == '0'){
+				$req->cliente= 'Todos';
+			}else{
+				$cliente = Cliente::findOrFail($req->cliente);
+			}
+
 
 			if($req->desde and $req->hasta){
 
@@ -64,7 +70,7 @@ class IndicadoresController extends Controller
 
 				if($req->cliente == 'Todos'){
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM actividad_portales
 					WHERE id_cliente != 1
 					AND date_format(`fecha_actividad`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')";
@@ -83,7 +89,7 @@ class IndicadoresController extends Controller
 
 				}else{
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM actividad_portales
 					WHERE id_cliente = ".$cliente->id_cliente."
 					AND date_format(`fecha_actividad`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')
@@ -93,12 +99,12 @@ class IndicadoresController extends Controller
 
 					$dias = count($results);
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM actividad_portales
-					WHERE id_cliente = ".$cliente->id_cliente." 
+					WHERE id_cliente = ".$cliente->id_cliente."
 					AND date_format(`fecha_actividad`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')";
 
-					$results = DB::select($sql);	
+					$results = DB::select($sql);
 
 					$registros = count($results);
 
@@ -120,7 +126,7 @@ class IndicadoresController extends Controller
 
 				if($req->cliente == 'Todos'){
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM actividad_portales
 					WHERE id_cliente != 1
 					AND date_format(`fecha_actividad`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')";
@@ -139,7 +145,7 @@ class IndicadoresController extends Controller
 
 				}else{
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM actividad_portales
 					WHERE id_cliente = ".$cliente->id_cliente."
 					AND date_format(`fecha_actividad`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')
@@ -149,12 +155,12 @@ class IndicadoresController extends Controller
 
 					$dias = count($results);
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM actividad_portales
-					WHERE id_cliente = ".$cliente->id_cliente." 
+					WHERE id_cliente = ".$cliente->id_cliente."
 					AND date_format(`fecha_actividad`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')";
 
-					$results = DB::select($sql);	
+					$results = DB::select($sql);
 
 					$registros = count($results);
 
@@ -176,7 +182,7 @@ class IndicadoresController extends Controller
 
 				if($req->cliente == 'Todos'){
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM actividad_portales
 					WHERE id_cliente != 1
 					AND date_format(`fecha_actividad`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')";
@@ -196,7 +202,7 @@ class IndicadoresController extends Controller
 
 				}else{
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM actividad_portales
 					WHERE id_cliente = ".$cliente->id_cliente."
 					AND date_format(`fecha_actividad`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')
@@ -206,12 +212,12 @@ class IndicadoresController extends Controller
 
 					$dias = count($results);
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM actividad_portales
-					WHERE id_cliente = ".$cliente->id_cliente." 
+					WHERE id_cliente = ".$cliente->id_cliente."
 					AND date_format(`fecha_actividad`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')";
 
-					$results = DB::select($sql);	
+					$results = DB::select($sql);
 
 					$registros = count($results);
 
@@ -259,7 +265,7 @@ class IndicadoresController extends Controller
 
 				}else{
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM actividad_portales
 					WHERE id_cliente = ".$cliente->id_cliente."
 					GROUP BY DATE_FORMAT( fecha_actividad,  '%d-%m-%Y' ) ";
@@ -268,11 +274,11 @@ class IndicadoresController extends Controller
 
 					$dias = count($results);
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM actividad_portales
 					WHERE id_cliente = ".$cliente->id_cliente;
 
-					$results = DB::select($sql);	
+					$results = DB::select($sql);
 
 					$registros = count($results);
 
@@ -305,7 +311,11 @@ class IndicadoresController extends Controller
 
 			$req->cliente = ltrim($req->cliente);
 
-			$cliente = Cliente::where('nombre', $req->cliente)->first();
+			if($req->cliente == '0'){
+				$req->cliente= 'Todos';
+			}else{
+				$cliente = Cliente::findOrFail($req->cliente);
+			}
 
 			if($req->desde and $req->hasta){
 
@@ -314,7 +324,7 @@ class IndicadoresController extends Controller
 
 				if($req->cliente == 'Todos'){
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM registro_portales
 					WHERE id_cliente != 1
 					AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')";
@@ -336,7 +346,7 @@ class IndicadoresController extends Controller
 
 				}else{
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM registro_portales
 					WHERE id_cliente = ".$cliente->id_cliente."
 					AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')
@@ -346,12 +356,12 @@ class IndicadoresController extends Controller
 
 					$dias = count($results);
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM registro_portales
-					WHERE id_cliente = ".$cliente->id_cliente." 
+					WHERE id_cliente = ".$cliente->id_cliente."
 					AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')";
 
-					$results = DB::select($sql);	
+					$results = DB::select($sql);
 
 					$registros = count($results);
 
@@ -373,7 +383,7 @@ class IndicadoresController extends Controller
 
 				if($req->cliente == 'Todos'){
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM registro_portales
 					WHERE id_cliente != 1
 					AND date_format(`fecha_registro`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')";
@@ -395,7 +405,7 @@ class IndicadoresController extends Controller
 
 				}else{
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM registro_portales
 					WHERE id_cliente = ".$cliente->id_cliente."
 					AND date_format(`fecha_registro`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')
@@ -405,12 +415,12 @@ class IndicadoresController extends Controller
 
 					$dias = count($results);
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM registro_portales
-					WHERE id_cliente = ".$cliente->id_cliente." 
+					WHERE id_cliente = ".$cliente->id_cliente."
 					AND date_format(`fecha_registro`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')";
 
-					$results = DB::select($sql);	
+					$results = DB::select($sql);
 
 					$registros = count($results);
 
@@ -432,7 +442,7 @@ class IndicadoresController extends Controller
 
 				if($req->cliente == 'Todos'){
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM registro_portales
 					WHERE id_cliente != 1
 					AND date_format(`fecha_registro`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')";
@@ -455,7 +465,7 @@ class IndicadoresController extends Controller
 
 				}else{
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM registro_portales
 					WHERE id_cliente = ".$cliente->id_cliente."
 					AND date_format(`fecha_registro`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')
@@ -465,12 +475,12 @@ class IndicadoresController extends Controller
 
 					$dias = count($results);
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM registro_portales
-					WHERE id_cliente = ".$cliente->id_cliente." 
+					WHERE id_cliente = ".$cliente->id_cliente."
 					AND date_format(`fecha_registro`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')";
 
-					$results = DB::select($sql);	
+					$results = DB::select($sql);
 
 					$registros = count($results);
 
@@ -504,7 +514,7 @@ class IndicadoresController extends Controller
 
 				}else{
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM registro_portales
 					WHERE id_cliente = ".$cliente->id_cliente."
 					GROUP BY date_format(`fecha_registro`,'%Y-%m-%d')";
@@ -513,11 +523,11 @@ class IndicadoresController extends Controller
 
 					$dias = count($results);
 
-					$sql = "SELECT * 	
+					$sql = "SELECT *
 					FROM registro_portales
 					WHERE id_cliente = ".$cliente->id_cliente;
 
-					$results = DB::select($sql);	
+					$results = DB::select($sql);
 
 					$registros = count($results);
 
@@ -551,7 +561,11 @@ class IndicadoresController extends Controller
 
 			$req->cliente = ltrim($req->cliente);
 
-			$cliente = Cliente::where('nombre', $req->cliente)->first();
+			if($req->cliente == '0'){
+				$req->cliente= 'Todos';
+			}else{
+				$cliente = Cliente::findOrFail($req->cliente);
+			}
 
 			if($req->desde and $req->hasta){
 
@@ -560,9 +574,9 @@ class IndicadoresController extends Controller
 
 				if($req->cliente == 'Todos'){
 
-					$sql = "SELECT *, min(fecha_registro) 
-					FROM registro_portales 
-					WHERE id_cliente != 1 AND id_usuario_ph IS NULL  
+					$sql = "SELECT *, min(fecha_registro)
+					FROM registro_portales
+					WHERE id_cliente != 1 AND id_usuario_ph IS NULL
 					AND  fecha_registro >= '".$req->desde."' AND fecha_registro <= '".$req->hasta."'
 					GROUP BY email";
 
@@ -572,9 +586,9 @@ class IndicadoresController extends Controller
 
 				}else{
 
-					$sql = "SELECT *, min(fecha_registro) 
-					FROM registro_portales 
-					WHERE id_cliente = ".$cliente->id_cliente." AND id_usuario_ph IS NULL 
+					$sql = "SELECT *, min(fecha_registro)
+					FROM registro_portales
+					WHERE id_cliente = ".$cliente->id_cliente." AND id_usuario_ph IS NULL
 					AND  fecha_registro >= '".$req->desde."' AND fecha_registro <= '".$req->hasta."'
 					GROUP BY email";
 
@@ -591,9 +605,9 @@ class IndicadoresController extends Controller
 
 				if($req->cliente == 'Todos'){
 
-					$sql = "SELECT *, min(fecha_registro) 
-					FROM registro_portales 
-					WHERE id_cliente != 1 AND id_usuario_ph IS NULL  
+					$sql = "SELECT *, min(fecha_registro)
+					FROM registro_portales
+					WHERE id_cliente != 1 AND id_usuario_ph IS NULL
 					AND  fecha_registro >= '".$req->desde."'
 					GROUP BY email";
 
@@ -602,9 +616,9 @@ class IndicadoresController extends Controller
 					$acti = count($results);
 
 				}else{
-					$sql = "SELECT *, min(fecha_registro) 
-					FROM registro_portales 
-					WHERE id_cliente = ".$cliente->id_cliente." AND id_usuario_ph IS NULL 
+					$sql = "SELECT *, min(fecha_registro)
+					FROM registro_portales
+					WHERE id_cliente = ".$cliente->id_cliente." AND id_usuario_ph IS NULL
 					AND  fecha_registro >= '".$req->desde."'
 					GROUP BY email";
 
@@ -620,9 +634,9 @@ class IndicadoresController extends Controller
 
 				if($req->cliente == 'Todos'){
 
-					$sql = "SELECT *, min(fecha_registro) 
-					FROM registro_portales 
-					WHERE id_cliente != 1 AND id_usuario_ph IS NULL  
+					$sql = "SELECT *, min(fecha_registro)
+					FROM registro_portales
+					WHERE id_cliente != 1 AND id_usuario_ph IS NULL
 					AND  fecha_registro <= '".$req->hasta."' GROUP BY email";
 
 					$results = DB::select($sql);
@@ -631,9 +645,9 @@ class IndicadoresController extends Controller
 
 				}else{
 
-					$sql = "SELECT *, min(fecha_registro) 
-					FROM registro_portales 
-					WHERE id_cliente = ".$cliente->id_cliente." AND id_usuario_ph IS NULL 
+					$sql = "SELECT *, min(fecha_registro)
+					FROM registro_portales
+					WHERE id_cliente = ".$cliente->id_cliente." AND id_usuario_ph IS NULL
 					AND  fecha_registro <= '".$req->hasta."'
 					GROUP BY email";
 
@@ -647,9 +661,9 @@ class IndicadoresController extends Controller
 
 				if($req->cliente == 'Todos'){
 
-					$sql = "SELECT *, min(fecha_registro) 
-					FROM registro_portales 
-					WHERE id_cliente != 1 AND id_usuario_ph IS NULL  
+					$sql = "SELECT *, min(fecha_registro)
+					FROM registro_portales
+					WHERE id_cliente != 1 AND id_usuario_ph IS NULL
 					GROUP BY email";
 
 					$results = DB::select($sql);
@@ -658,9 +672,9 @@ class IndicadoresController extends Controller
 
 				}else{
 
-					$sql = "SELECT *, min(fecha_registro) 
-					FROM registro_portales 
-					WHERE id_cliente = ".$cliente->id_cliente." AND id_usuario_ph IS NULL  
+					$sql = "SELECT *, min(fecha_registro)
+					FROM registro_portales
+					WHERE id_cliente = ".$cliente->id_cliente." AND id_usuario_ph IS NULL
 					GROUP BY email";
 
 					$results = DB::select($sql);
@@ -684,14 +698,18 @@ class IndicadoresController extends Controller
 
 			$req->cliente = ltrim($req->cliente);
 
-			$cliente = Cliente::where('nombre', $req->cliente)->first();
+			if($req->cliente == '0'){
+				$req->cliente= 'Todos';
+			}else{
+				$cliente = Cliente::findOrFail($req->cliente);
+			}
 
 			if($req->desde and $req->hasta){
 
 				$req->desde = (new DateTime($req->desde))->format('Y-m-d');
 				$req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
 
-				$sql = "SELECT * 	
+				$sql = "SELECT *
 				FROM usuarios_ph, registro_portales
 				WHERE usuarios_ph.id_usuario_ph = registro_portales.id_usuario_ph
 				AND registro_portales.id_cliente != 1
@@ -706,7 +724,7 @@ class IndicadoresController extends Controller
 
 				$req->desde = (new DateTime($req->desde))->format('Y-m-d');
 
-				$sql = "SELECT * 	
+				$sql = "SELECT *
 				FROM usuarios_ph, registro_portales
 				WHERE usuarios_ph.id_usuario_ph = registro_portales.id_usuario_ph
 				AND registro_portales.id_cliente != 1
@@ -722,7 +740,7 @@ class IndicadoresController extends Controller
 
 				$req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
 
-				$sql = "SELECT * 	
+				$sql = "SELECT *
 				FROM usuarios_ph, registro_portales
 				WHERE usuarios_ph.id_usuario_ph = registro_portales.id_usuario_ph
 				AND registro_portales.id_cliente != 1
@@ -734,7 +752,7 @@ class IndicadoresController extends Controller
 
 			}else{
 
-				$sql = "SELECT * 	
+				$sql = "SELECT *
 				FROM usuarios_ph, registro_portales
 				WHERE usuarios_ph.id_usuario_ph = registro_portales.id_usuario_ph
 				AND registro_portales.id_cliente != 1
@@ -760,7 +778,11 @@ class IndicadoresController extends Controller
 
 			$req->cliente = ltrim($req->cliente);
 
-			$cliente = Cliente::where('nombre', $req->cliente)->first();
+			if($req->cliente == '0'){
+				$req->cliente= 'Todos';
+			}else{
+				$cliente = Cliente::findOrFail($req->cliente);
+			}
 
 			if($req->desde and $req->hasta){
 
@@ -768,11 +790,11 @@ class IndicadoresController extends Controller
 				$req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
 
 				if($req->cliente == 'Todos'){
-					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
-					FROM `registro_portales` 
+					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha'
+					FROM `registro_portales`
 					WHERE registro_portales.id_cliente != 1
 					AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')
-					GROUP BY `mac` 
+					GROUP BY `mac`
 					HAVING ( COUNT(*) > 2)";
 
 					$results = DB::select($sql);
@@ -781,11 +803,11 @@ class IndicadoresController extends Controller
 
 				}else{
 
-					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
-					FROM `registro_portales` 
+					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha'
+					FROM `registro_portales`
 					WHERE `id_cliente` = ".$cliente->id_cliente."
 					AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')
-					GROUP BY `mac` 
+					GROUP BY `mac`
 					HAVING ( COUNT(*) > 2)";
 
 					$results = DB::select($sql);
@@ -801,11 +823,11 @@ class IndicadoresController extends Controller
 
 				if($req->cliente == 'Todos'){
 
-					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
+					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha'
 					FROM `registro_portales`
-					WHERE registro_portales.id_cliente != 1 
+					WHERE registro_portales.id_cliente != 1
 					AND date_format(`fecha_registro`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')
-					GROUP BY `mac` 
+					GROUP BY `mac`
 					HAVING ( COUNT(*) > 2)";
 
 					$results = DB::select($sql);
@@ -814,11 +836,11 @@ class IndicadoresController extends Controller
 
 				}else{
 
-					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
-					FROM `registro_portales` 
+					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha'
+					FROM `registro_portales`
 					WHERE `id_cliente` = ".$cliente->id_cliente."
 					AND date_format(`fecha_registro`,'%m-%d-%Y') > date_format( '".$req->desde."' ,'%m-%d-%Y')
-					GROUP BY `mac` 
+					GROUP BY `mac`
 					HAVING ( COUNT(*) > 2)";
 
 					$results = DB::select($sql);
@@ -833,11 +855,11 @@ class IndicadoresController extends Controller
 				$req->hasta = (new DateTime($req->hasta))->format('Y-m-d');
 
 				if($req->cliente == 'Todos'){
-					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
-					FROM `registro_portales` 
+					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha'
+					FROM `registro_portales`
 					WHERE registro_portales.id_cliente != 1
 					AND date_format(`fecha_registro`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')
-					GROUP BY `mac` 
+					GROUP BY `mac`
 					HAVING ( COUNT(*) > 2)";
 
 					$results = DB::select($sql);
@@ -846,11 +868,11 @@ class IndicadoresController extends Controller
 
 				}else{
 
-					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
-					FROM `registro_portales` 
+					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha'
+					FROM `registro_portales`
 					WHERE `id_cliente` = ".$cliente->id_cliente."
 					AND date_format(fecha_registro,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')
-					GROUP BY `mac` 
+					GROUP BY `mac`
 					HAVING ( COUNT(*) > 2)";
 
 					$results = DB::select($sql);
@@ -863,10 +885,10 @@ class IndicadoresController extends Controller
 
 				if($req->cliente == 'Todos'){
 
-					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
+					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha'
 					FROM `registro_portales`
 					WHERE registro_portales.id_cliente != 1
-					GROUP BY `mac` 
+					GROUP BY `mac`
 					HAVING ( COUNT(*) > 2)";
 					$results = DB::select($sql);
 
@@ -874,10 +896,10 @@ class IndicadoresController extends Controller
 
 				}else{
 
-					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
-					FROM `registro_portales` 
+					$sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha'
+					FROM `registro_portales`
 					WHERE `id_cliente` = ".$cliente->id_cliente."
-					GROUP BY `mac` 
+					GROUP BY `mac`
 					HAVING ( COUNT(*) > 2)";
 
 					$results = DB::select($sql);

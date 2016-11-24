@@ -19,4 +19,11 @@
 
 <!-- WAITME PLUGIN PARA LOGO LOADIN -->
 <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script> -->
-<script src="{{ asset('/plugins/waitMe/waitMe.js') }}"></script> 
+<script src="{{ asset('/plugins/waitMe/waitMe.js') }}"></script>
+
+
+<!-- FULLCALENDAR -->
+<script src="{{ asset ('/plugins/fullcalendar-3.0.1/lib/moment.min.js')}}"></script>
+<link rel="stylesheet" type="text/css" href="{{ asset ('/plugins/fullcalendar-3.0.1/fullcalendar.min.css')}}"/>
+<link rel="stylesheet" type="text/css" href="{{ asset ('/plugins/fullcalendar-3.0.1/fullcalendar.print.css')}}" media="print">
+<script src="{{ asset ('/plugins/fullcalendar-3.0.1/fullcalendar.js')}}"></script>

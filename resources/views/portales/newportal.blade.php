@@ -68,19 +68,19 @@ Nuevo Portal
 					</div>
 					<div class="row " style="padding-top: 7px;">
 						<div class="form col-xs-12">
-							<label for="exampleInputFile">Imagen Publicidad &nbsp;</label><small>(Máx. 150 Kb)</small>
+							<label for="exampleInputFile">Imagen Publicidad &nbsp;</label><small></small>
 							<input type="file" class="input-file" id="imagen_publicidad" ext="jpg" name="imagen_publicidad" size="150">
 						</div>
 					</div>
 					<div class="row" style="padding-top: 7px;">
 						<div class="form col-xs-12">
-							<label for="exampleInputFile">Logo Local &nbsp;</label><small>(Máx. 100 Kb)</small>
+							<label for="exampleInputFile">Logo Local &nbsp;</label><small></small>
 							<input type="file" class="input-file" id="imagen_logo" name="imagen_logo" ext="png" size="100">
 						</div>
 					</div>
 					<div class="row" style="padding-top: 7px;">
 						<div class="form col-xs-12">
-							<label for="exampleInputFile">Imagen Fondo &nbsp;</label><small>(Máx. 60 Kb)</small>
+							<label for="exampleInputFile">Imagen Fondo &nbsp;</label><small></small>
 							<input type="file" class="input-file" id="imagen_fondo" name="imagen_fondo" ext="jpg" size="60">
 						</div>
 					</div>
@@ -156,17 +156,22 @@ Nuevo Portal
 
     		var extension = filename.substr( (filename.lastIndexOf('.') +1) );
 
-    		if($(this).attr('ext') == extension){
-    			var sizeByte = this.files[0].size;
+    		if ( extension === 'jpg' || extension === 'jpeg' || extension === 'png' || extension === 'gif' || extension === 'mov'){
 
-    			var siezekiloByte = parseInt(sizeByte / 1024);
 
-    			if(siezekiloByte > $(this).attr('size')){
-    				alert('El tamaño supera el limite permitido ('+$(this).attr('size')+' Kb)');
-    				$(this).val('');
-    			}
+    		// if($(this).attr('ext') == extension){
+    			// var sizeByte = this.files[0].size;
+
+    			// var siezekiloByte = parseInt(sizeByte / 1024);
+
+    			// if(siezekiloByte > $(this).attr('size')){
+    			// 	alert('El tamaño supera el limite permitido ('+$(this).attr('size')+' Kb)');
+    			// 	$(this).val('');
+    			// }
     		}else{
-    			alert("El formato para '"+$(this).attr('name')+"' debe ser '"+$(this).attr('ext')+"'");
+    			// alert("El formato para '"+$(this).attr('name')+"' debe ser '"+$(this).attr('ext')+"'");
+    			// $(this).val('');
+    			alert("Los formato para '"+$(this).attr('name')+"' pertmitido son (jpg, jpeg, png, gif o mov");
     			$(this).val('');
     		}
 

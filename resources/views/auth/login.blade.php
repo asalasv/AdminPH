@@ -4,6 +4,11 @@
     Log in
 @endsection
 
+<!-- Main Header -->
+<header class="main-header">
+    <img src="img/comodo_secure_seal_76x26_transp.png" alt="..." class="img-responsive">
+</header>
+
 @section('content')
 <body class="hold-transition login-page">
     <div class="login-box">
@@ -51,7 +56,6 @@
         <p class="login-box-msg" style="padding-bottom: 0px;padding-top: 10px;">Si tienes un usuario web administrador, ingresa colocando el email y el password.</p>
 
 </div><!-- /.login-box-body -->
-
 
 </div><!-- /.login-box -->
 

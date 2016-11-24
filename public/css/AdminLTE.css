@@ -3202,8 +3202,14 @@ table.text-center th {
 .register-page {
   background: #d2d6de;
 }
-.login-box,
+
 .register-box {
+  /*width: 360px;*/
+  width: 700px;
+  margin: 7% auto;
+}
+
+.login-box {
   width: 360px;
   margin: 7% auto;
 }

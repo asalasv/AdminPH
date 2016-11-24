@@ -15,8 +15,8 @@ Home
 				<div class="box-tools pull-right">
 					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
 					</button>
-				</div>	
-			</div>	
+				</div>
+			</div>
 			<div class="box-body">
 				<div class="row">
 					<form class="form-inline col-md-12" id="prom_conex">
@@ -24,9 +24,9 @@ Home
 						<div class="form-group">
 							<label>Cliente</label>
 							<select class="form-control input-sm cliente">
-								<option>Todos</option>
+								<option value="0">Todos</option>
 								@foreach($clientes as $cliente )
-								<option> {{$cliente->nombre}}</option>
+								<option value="{{$cliente->id_cliente}}"> {{$cliente->nombre}}</option>
 								@endforeach
 							</select>
 						</div>
@@ -68,18 +68,18 @@ Home
 				<div class="box-tools pull-right">
 					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
 					</button>
-				</div>	
-			</div>	
+				</div>
+			</div>
 			<div class="box-body">
 				<div class="row">
 					<form class="form-inline col-md-12" id="prom_regis">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						<div class="form-group">
 							<label>Cliente</label>
-							<select class="form-control input-sm cliente">>
-								<option>Todos</option>
+							<select class="form-control input-sm cliente">
+								<option value="0">Todos</option>
 								@foreach($clientes as $cliente )
-								<option> {{$cliente->nombre}}</option>
+								<option value="{{$cliente->id_cliente}}"> {{$cliente->nombre}}</option>
 								@endforeach
 							</select>
 						</div>
@@ -122,7 +122,7 @@ Home
 				<div class="box-tools pull-right">
 					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
 					</button>
-				</div>	
+				</div>
 			</div>
 			<div class="box-body">
 				<div class="row">
@@ -130,10 +130,10 @@ Home
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						<div class="form-group">
 							<label>Cliente</label>
-							<select class="form-control input-sm cliente">>
-								<option>Todos</option>
+							<select class="form-control input-sm cliente">
+								<option value="0">Todos</option>
 								@foreach($clientes as $cliente )
-								<option> {{$cliente->nombre}}</option>
+								<option value="{{$cliente->id_cliente}}"> {{$cliente->nombre}}</option>
 								@endforeach
 							</select>
 						</div>
@@ -175,7 +175,7 @@ Home
 				<div class="box-tools pull-right">
 					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
 					</button>
-				</div>	
+				</div>
 			</div>
 			<div class="box-body">
 				<div class="row">
@@ -219,7 +219,7 @@ Home
 				<div class="box-tools pull-right">
 					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
 					</button>
-				</div>	
+				</div>
 			</div>
 			<div class="box-body">
 				<div class="row">
@@ -227,10 +227,10 @@ Home
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						<div class="form-group">
 							<label>Cliente</label>
-							<select class="form-control input-sm cliente">>
-								<option>Todos</option>
+							<select class="form-control input-sm cliente">
+								<option value="0">Todos</option>
 								@foreach($clientes as $cliente )
-								<option> {{$cliente->nombre}}</option>
+								<option value="{{$cliente->id_cliente}}"> {{$cliente->nombre}}</option>
 								@endforeach
 							</select>
 						</div>
@@ -289,13 +289,13 @@ Home
 	$(document).ready(function(){
 
 	//FUnciones al abrir ventana
-	var dataString = "cliente=Todos&desde=&hasta=";
+	var dataString = "cliente=0&desde=&hasta=";
 	$.ajax({
 		type: "get",
 		url: "/conexionesprom",
 		data: dataString,
-		success: function(data){	
-			console.log(data[1]);	
+		success: function(data){
+			console.log(data[1]);
 			$('#conexiones').html(data[1]);
 			$('#conexprom').html(data[0]);
 		}
@@ -305,7 +305,7 @@ Home
 		url: "/registroprom",
 		data: dataString,
 		success: function(data){
-			$('#registros').html(data[1]);		
+			$('#registros').html(data[1]);
 			$('#regisprom').html(data[0]);
 		}
 	});
@@ -314,7 +314,7 @@ Home
 		url: "/registroprom",
 		data: dataString,
 		success: function(data){
-			$('#registros').html(data[1]);		
+			$('#registros').html(data[1]);
 			$('#regisprom').html(data[0]);
 		}
 	});
@@ -322,7 +322,7 @@ Home
 		type: "get",
 		url: "/cantvisitantes",
 		data: dataString,
-		success: function(data){	
+		success: function(data){
 			console.log(data);
 			$('#cantidadvisitantes').text(data);
 		}
@@ -331,7 +331,7 @@ Home
 		type: "get",
 		url: "/cantidadregistros",
 		data: dataString,
-		success: function(data){	
+		success: function(data){
 			console.log(data);
 			$('#cantidadusuarios').text(data);
 		}
@@ -340,7 +340,7 @@ Home
 		type: "get",
 		url: "/conexfraudulentas",
 		data: dataString,
-		success: function(data){			
+		success: function(data){
 			console.log(data);
 			$('#conexfraudu').text(data);
 		}
@@ -349,7 +349,7 @@ Home
 
 
 	$(document).ajaxStart(function () {
-		var current_effect = 'bounce'; 
+		var current_effect = 'bounce';
 		run_waitMe(current_effect);
 	}).ajaxStop(function () {
 		$("body").waitMe("hide");
@@ -357,18 +357,19 @@ Home
 
 	$(".prom_conex").click(function(){
 
-		var cliente = $( "#prom_conex .cliente option:selected" ).text();
+		var cliente = $( "#prom_conex .cliente option:selected" ).val();
 		var vdesde = $("#prom_conex :input[name='vdesde']").val();
 		var vhasta = $("#prom_conex :input[name='vhasta']").val();
 
 		var dataString = "cliente="+cliente+"&desde="+vdesde+"&hasta="+vhasta;
-
+		console.log(dataString);
 		$.ajax({
 			type: "get",
 			url: "/conexionesprom",
 			data: dataString,
-			success: function(data){	
-				console.log(data[1]);	
+			success: function(data){
+				console.log('data: '+data);
+				console.log(data[1]);
 				$('#conexiones').html(data[1]);
 				$('#conexprom').html(data[0]);
 			}
@@ -378,7 +379,7 @@ Home
 
 	$(".prom_regis").click(function(){
 
-		var cliente = $( "#prom_regis .cliente option:selected" ).text();
+		var cliente = $( "#prom_regis .cliente option:selected" ).val();
 		var vdesde = $("#prom_regis :input[name='vdesde']").val();
 		var vhasta = $("#prom_regis :input[name='vhasta']").val();
 
@@ -389,7 +390,8 @@ Home
 			url: "/registroprom",
 			data: dataString,
 			success: function(data){
-				$('#registros').html(data[1]);		
+				console.log(data);
+				$('#registros').html(data[1]);
 				$('#regisprom').html(data[0]);
 			}
 		});
@@ -398,7 +400,7 @@ Home
 
 	$(".cant_visi").click(function(){
 
-		var cliente = $( "#cant_visi .cliente option:selected" ).text();
+		var cliente = $( "#cant_visi .cliente option:selected" ).val();
 		var vdesde = $("#cant_visi :input[name='vdesde']").val();
 		var vhasta = $("#cant_visi :input[name='vhasta']").val();
 
@@ -408,7 +410,7 @@ Home
 			type: "get",
 			url: "/cantvisitantes",
 			data: dataString,
-			success: function(data){	
+			success: function(data){
 				console.log(data);
 				$('#cantidadvisitantes').text(data);
 			}
@@ -418,7 +420,7 @@ Home
 
 	$(".cant_user").click(function(){
 
-		var cliente = $( "#cant_user .cliente option:selected" ).text();
+		var cliente = $( "#cant_user .cliente option:selected" ).val();
 		var vdesde = $("#cant_user :input[name='vdesde']").val();
 		var vhasta = $("#cant_user :input[name='vhasta']").val();
 
@@ -428,7 +430,7 @@ Home
 			type: "get",
 			url: "/cantidadregistros",
 			data: dataString,
-			success: function(data){	
+			success: function(data){
 				console.log(data);
 				$('#cantidadusuarios').text(data);
 			}
@@ -438,7 +440,7 @@ Home
 
 	$(".conex_fraudu").click(function(){
 
-		var cliente = $( "#conex_fraudu .cliente option:selected" ).text();
+		var cliente = $( "#conex_fraudu .cliente option:selected" ).val();
 		var vdesde = $("#conex_fraudu :input[name='vdesde']").val();
 		var vhasta = $("#conex_fraudu :input[name='vhasta']").val();
 
@@ -448,7 +450,7 @@ Home
 			type: "get",
 			url: "/conexfraudulentas",
 			data: dataString,
-			success: function(data){			
+			success: function(data){
 				console.log(data);
 				$('#conexfraudu').text(data);
 			}
@@ -459,8 +461,8 @@ Home
 	function run_waitMe(effect){
 		$("body").waitMe({
 
-			//none, rotateplane, stretch, orbit, roundBounce, win8, 
-			//win8_linear, ios, facebook, rotation, timer, pulse, 
+			//none, rotateplane, stretch, orbit, roundBounce, win8,
+			//win8_linear, ios, facebook, rotation, timer, pulse,
 			//progressBar, bouncePulse or img
 			effect: 'bounce',
 

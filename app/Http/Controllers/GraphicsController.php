@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Request;
-use Auth; 
+use Auth;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Cliente;
@@ -66,7 +66,7 @@ class GraphicsController extends Controller
 
         $clientes = $this->getclientes();
 
-        $cliente = Cliente::findOrFail($this->getIdcliente());  
+        $cliente = Cliente::findOrFail($this->getIdcliente());
 
         return view('graphics/newlastweekreg',compact('clientes','cliente'));
     }
@@ -105,7 +105,7 @@ class GraphicsController extends Controller
                 $sql = "SELECT date_format(`fecha_registro`,'%m-%d-%Y'), count(date_format(`fecha_registro`,'%m-%d-%Y'))
                 FROM `primer_registro_email`
                 WHERE `id_cliente` = ".$id_cliente.
-                " AND date_format(`fecha_registro`,'%m-%d-%Y')  > date_format( '".$req->desde."' ,'%m-%d-%Y') 
+                " AND date_format(`fecha_registro`,'%m-%d-%Y')  > date_format( '".$req->desde."' ,'%m-%d-%Y')
                 GROUP BY date_format(`fecha_registro`,'%m-%d-%Y')";
             }else
             if($req->hasta){
@@ -125,7 +125,7 @@ class GraphicsController extends Controller
                 GROUP BY date_format(`fecha_registro`,'%m-%d-%Y')";
             }
 
-            
+
 
             $results = DB::select($sql);
 
@@ -160,7 +160,7 @@ class GraphicsController extends Controller
             $req = json_decode($req);
 
             $user=Auth::user();
-            
+
 
             $id_cliente = $this->getIdcliente();
 
@@ -183,7 +183,7 @@ class GraphicsController extends Controller
                 $sql = "SELECT date_format(`fecha_actividad`,'%m-%d-%Y'), count(date_format(`fecha_actividad`,'%m-%d-%Y'))
                 FROM `actividad_portales`
                 WHERE `id_cliente` = ".$id_cliente.
-                " AND date_format(`fecha_actividad`,'%m-%d-%Y')  > date_format( '".$req->desde."' ,'%m-%d-%Y') 
+                " AND date_format(`fecha_actividad`,'%m-%d-%Y')  > date_format( '".$req->desde."' ,'%m-%d-%Y')
                 GROUP BY date_format(`fecha_actividad`,'%m-%d-%Y')";
             }else
             if($req->hasta){
@@ -221,7 +221,7 @@ class GraphicsController extends Controller
             $req = json_decode($req);
 
             $user=Auth::user();
-            
+
             $id_cliente = $this->getIdcliente();
 
             if($req->desde and $req->hasta){
@@ -243,7 +243,7 @@ class GraphicsController extends Controller
                 $sql = "SELECT date_format(`fecha_registro`,'%m-%d-%Y'), count(date_format(`fecha_registro`,'%m-%d-%Y'))
                 FROM `registro_portales`
                 WHERE `id_cliente` = ".$id_cliente.
-                " AND date_format(`fecha_registro`,'%m-%d-%Y')  > date_format( '".$req->desde."' ,'%m-%d-%Y') 
+                " AND date_format(`fecha_registro`,'%m-%d-%Y')  > date_format( '".$req->desde."' ,'%m-%d-%Y')
                 GROUP BY date_format(`fecha_registro`,'%m-%d-%Y')";
             }else
             if($req->hasta){
@@ -264,7 +264,7 @@ class GraphicsController extends Controller
             }
 
 
-            
+
             $results = DB::select($sql);
 
             return $results;
@@ -309,13 +309,13 @@ class GraphicsController extends Controller
                 $sql = "SELECT date_format(`fecha_registro`,'%m-%d-%Y'), count(date_format(`fecha_registro`,'%m-%d-%Y'))
                 FROM `registro_usuarios_ph`
                 WHERE `id_cliente` = ".$id_cliente.
-                " AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y') 
+                " AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')
                 GROUP BY date_format(`fecha_registro`,'%m-%d-%Y')";
                 $sql1 = "SELECT date_format(`fecha_registro`,'%m-%d-%Y'), count(date_format(`fecha_registro`,'%m-%d-%Y'))
                 FROM `registro_portales`
                 WHERE `id_cliente` = ".$id_cliente.
                 " AND `id_usuario_ph` IS NULL
-                AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y') 
+                AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')
                 GROUP BY date_format(`fecha_registro`,'%m-%d-%Y')";
             }else
             if($req->desde){
@@ -325,13 +325,13 @@ class GraphicsController extends Controller
                 $sql = "SELECT date_format(`fecha_registro`,'%m-%d-%Y'), count(date_format(`fecha_registro`,'%m-%d-%Y'))
                 FROM `registro_usuarios_ph`
                 WHERE `id_cliente` = ".$id_cliente.
-                " AND date_format(`fecha_registro`,'%m-%d-%Y')  > date_format( '".$req->desde."' ,'%m-%d-%Y') 
+                " AND date_format(`fecha_registro`,'%m-%d-%Y')  > date_format( '".$req->desde."' ,'%m-%d-%Y')
                 GROUP BY date_format(`fecha_registro`,'%m-%d-%Y')";
                 $sql1 = "SELECT date_format(`fecha_registro`,'%m-%d-%Y'), count(date_format(`fecha_registro`,'%m-%d-%Y'))
                 FROM `registro_portales`
                 WHERE `id_cliente` = ".$id_cliente.
                 " AND `id_usuario_ph` IS NULL
-                AND date_format(`fecha_registro`,'%m-%d-%Y')  > date_format( '".$req->desde."' ,'%m-%d-%Y') 
+                AND date_format(`fecha_registro`,'%m-%d-%Y')  > date_format( '".$req->desde."' ,'%m-%d-%Y')
                 GROUP BY date_format(`fecha_registro`,'%m-%d-%Y')";
             }else
             if($req->hasta){
@@ -347,7 +347,7 @@ class GraphicsController extends Controller
                 FROM `registro_portales`
                 WHERE `id_cliente` = ".$id_cliente.
                 " AND `id_usuario_ph` IS NULL
-                AND date_format(`fecha_registro`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y') 
+                AND date_format(`fecha_registro`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')
                 GROUP BY date_format(`fecha_registro`,'%m-%d-%Y')";
             }else{
                 $sql = "SELECT date_format(`fecha_registro`,'%m-%d-%Y'), count(date_format(`fecha_registro`,'%m-%d-%Y'))
@@ -362,7 +362,7 @@ class GraphicsController extends Controller
                 AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format(now()-interval 7 day,'%m-%d-%Y') and date_format(now(),'%m-%d-%Y')
                 GROUP BY date_format(`fecha_registro`,'%m-%d-%Y')";
             }
-            
+
             $results = DB::select($sql);
 
             $results1 = DB::select($sql1);
@@ -412,14 +412,14 @@ class GraphicsController extends Controller
                 $sql = "SELECT date_format(`fecha_registro`,'%m-%d-%Y'), count(date_format(`fecha_registro`,'%m-%d-%Y'))
                 FROM `registro_usuarios_ph`
                 WHERE `id_cliente` = ".$id_cliente.
-                " AND `sex` = 'M' 
-                AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y') 
+                " AND `sex` = 'M'
+                AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')
                 GROUP BY date_format(`fecha_registro`,'%m-%d-%Y')";
                 $sql1 = "SELECT date_format(`fecha_registro`,'%m-%d-%Y'), count(date_format(`fecha_registro`,'%m-%d-%Y'))
                 FROM `registro_usuarios_ph`
                 WHERE `id_cliente` = ".$id_cliente.
-                " AND `sex` = 'F' 
-                AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y') 
+                " AND `sex` = 'F'
+                AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format( '".$req->desde."' ,'%m-%d-%Y') and date_format( '".$req->hasta."' ,'%m-%d-%Y')
                 GROUP BY date_format(`fecha_registro`,'%m-%d-%Y')";
             }else
             if($req->desde){
@@ -429,14 +429,14 @@ class GraphicsController extends Controller
                 $sql = "SELECT date_format(`fecha_registro`,'%m-%d-%Y'), count(date_format(`fecha_registro`,'%m-%d-%Y'))
                 FROM `registro_usuarios_ph`
                 WHERE `id_cliente` = ".$id_cliente.
-                " AND `sex` = 'M' 
-                AND date_format(`fecha_registro`,'%m-%d-%Y')  > date_format( '".$req->desde."' ,'%m-%d-%Y') 
+                " AND `sex` = 'M'
+                AND date_format(`fecha_registro`,'%m-%d-%Y')  > date_format( '".$req->desde."' ,'%m-%d-%Y')
                 GROUP BY date_format(`fecha_registro`,'%m-%d-%Y')";
                 $sql1 = "SELECT date_format(`fecha_registro`,'%m-%d-%Y'), count(date_format(`fecha_registro`,'%m-%d-%Y'))
                 FROM `registro_usuarios_ph`
                 WHERE `id_cliente` = ".$id_cliente.
-                " AND `sex` = 'F' 
-                AND date_format(`fecha_registro`,'%m-%d-%Y')  > date_format( '".$req->desde."' ,'%m-%d-%Y') 
+                " AND `sex` = 'F'
+                AND date_format(`fecha_registro`,'%m-%d-%Y')  > date_format( '".$req->desde."' ,'%m-%d-%Y')
                 GROUP BY date_format(`fecha_registro`,'%m-%d-%Y')";
             }else
             if($req->hasta){
@@ -446,30 +446,30 @@ class GraphicsController extends Controller
                 $sql = "SELECT date_format(`fecha_registro`,'%m-%d-%Y'), count(date_format(`fecha_registro`,'%m-%d-%Y'))
                 FROM `registro_usuarios_ph`
                 WHERE `id_cliente` = ".$id_cliente.
-                " AND `sex` = 'M' 
+                " AND `sex` = 'M'
                 AND date_format(`fecha_registro`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')
                 GROUP BY date_format(`fecha_registro`,'%m-%d-%Y')";
                 $sql1 = "SELECT date_format(`fecha_registro`,'%m-%d-%Y'), count(date_format(`fecha_registro`,'%m-%d-%Y'))
                 FROM `registro_usuarios_ph`
                 WHERE `id_cliente` = ".$id_cliente.
-                " AND `sex` = 'F' 
+                " AND `sex` = 'F'
                 AND date_format(`fecha_registro`,'%m-%d-%Y') < date_format( '".$req->hasta."' ,'%m-%d-%Y')
                 GROUP BY date_format(`fecha_registro`,'%m-%d-%Y')";
             }else{
                 $sql = "SELECT date_format(`fecha_registro`,'%m-%d-%Y'), count(date_format(`fecha_registro`,'%m-%d-%Y'))
                 FROM `registro_usuarios_ph`
                 WHERE `id_cliente` = ".$id_cliente.
-                " AND `sex` = 'M' 
+                " AND `sex` = 'M'
                 AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format(now()-interval 7 day,'%m-%d-%Y') and date_format(now(),'%m-%d-%Y')
                 GROUP BY date_format(`fecha_registro`,'%m-%d-%Y')";
                 $sql1 = "SELECT date_format(`fecha_registro`,'%m-%d-%Y'), count(date_format(`fecha_registro`,'%m-%d-%Y'))
                 FROM `registro_usuarios_ph`
                 WHERE `id_cliente` = ".$id_cliente.
-                " AND `sex` = 'F' 
+                " AND `sex` = 'F'
                 AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format(now()-interval 7 day,'%m-%d-%Y') and date_format(now(),'%m-%d-%Y')
                 GROUP BY date_format(`fecha_registro`,'%m-%d-%Y')";
             }
-            
+
             $results = DB::select($sql);
 
             $results1 = DB::select($sql1);
@@ -489,14 +489,14 @@ class GraphicsController extends Controller
 
         $clientes = $this->getclientes();
 
-        $sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha' 
-        FROM `registro_portales` 
+        $sql = "SELECT `mac`, `id_registro`, Count(`mac`) as 'Conexiones', date(`fecha_registro`) as 'fecha'
+        FROM `registro_portales`
         WHERE `id_cliente` = ".$this->getIdcliente().
         " AND date_format(`fecha_registro`,'%m-%d-%Y') between date_format(now()-interval 7 day,'%m-%d-%Y') and date_format(now(),'%m-%d-%Y')
-        GROUP BY date(`fecha_registro`),`mac` 
+        GROUP BY date(`fecha_registro`),`mac`
         HAVING ( COUNT(*) > 2)";
 
-        $macs = DB::select($sql);     
+        $macs = DB::select($sql);
 
         $conexiones = array();
 
@@ -509,13 +509,13 @@ class GraphicsController extends Controller
 
            $sql1 = "SELECT `id_registro`, `fecha_registro`,`id_usuario_ph`,`nombre`,`apellido`,`email`,`mac`,date(`fecha_registro`) as 'fecha'  FROM `registro_portales` WHERE `mac` = '".$mc."' and date(`fecha_registro`) = '".$fech."' ORDER BY `fecha_registro` DESC";
 
-           $datos = DB::select($sql1); 
+           $datos = DB::select($sql1);
 
            array_push($conexiones, $datos);
            array_push($macs_array, $mac->mac);
-       }   
+       }
 
-       shell_exec('./listado_mac.sh '.$this->getIdcliente());
+       //shell_exec('./listado_mac.sh '.$this->getIdcliente());
 
        $cliente = Cliente::findOrFail($this->getIdcliente());
 
@@ -550,26 +550,26 @@ public function getrecurrenciaporc(){
 
             // cantidad de conexiones recurrentes por mes
             // $sql1=     "SELECT sum(Conexiones) as 'Conexiones_recurrentes', Mes from (SELECT  `mac` , COUNT(  `mac` ) AS  'Conexiones', DATE_FORMAT(  `fecha_actividad` ,  '%M-%Y' ) AS  'Mes'
-            //         FROM  `actividad_portales` 
+            //         FROM  `actividad_portales`
             //         WHERE  `id_cliente` = ".$id_cliente.
-            //         " AND DATE_FORMAT(  `fecha_actividad` ,  '%m-%d-%Y' ) 
-            //         BETWEEN DATE_FORMAT( NOW( ) - INTERVAL 7 MONTH ,  '%m-%Y' ) 
-            //         AND DATE_FORMAT( NOW( ) - INTERVAL 1 MONTH ,  '%m-%Y' ) 
-            //         GROUP BY DATE_FORMAT(  `fecha_actividad` ,  '%m-%Y' ) ,  `mac` 
+            //         " AND DATE_FORMAT(  `fecha_actividad` ,  '%m-%d-%Y' )
+            //         BETWEEN DATE_FORMAT( NOW( ) - INTERVAL 7 MONTH ,  '%m-%Y' )
+            //         AND DATE_FORMAT( NOW( ) - INTERVAL 1 MONTH ,  '%m-%Y' )
+            //         GROUP BY DATE_FORMAT(  `fecha_actividad` ,  '%m-%Y' ) ,  `mac`
             //         HAVING (COUNT( * ) >1)) AS t group by Mes ORDER BY `t`.`Mes` DESC";
 
             // cantidad de conexiones recurrentes por mes
         $sql1 = "select count(*) as 'Conexiones_recurrentes', mes as Mes from (SELECT mac, COUNT( mac ) , mes
         FROM (
         SELECT mac, DATE_FORMAT(  `fecha_actividad` ,  '%m-%Y' ) AS mes
-        FROM  `actividad_portales` 
+        FROM  `actividad_portales`
         WHERE `id_cliente` = ".$id_cliente."
-        AND DATE_FORMAT(  `fecha_actividad` ,  '%Y-%m' ) 
-        BETWEEN DATE_FORMAT( NOW( ) - INTERVAL 7 
-        MONTH ,  '%Y-%m' ) 
-        AND DATE_FORMAT( NOW( ) - INTERVAL 1 
-        MONTH ,  '%Y-%m' ) 
-        GROUP BY mac, DATE_FORMAT(  `fecha_actividad` ,  '%Y-%m-%d' ) 
+        AND DATE_FORMAT(  `fecha_actividad` ,  '%Y-%m' )
+        BETWEEN DATE_FORMAT( NOW( ) - INTERVAL 7
+        MONTH ,  '%Y-%m' )
+        AND DATE_FORMAT( NOW( ) - INTERVAL 1
+        MONTH ,  '%Y-%m' )
+        GROUP BY mac, DATE_FORMAT(  `fecha_actividad` ,  '%Y-%m-%d' )
         ORDER BY mac
         )m
         GROUP BY mac, mes
@@ -579,18 +579,18 @@ public function getrecurrenciaporc(){
 
             //cantidad de conexiones totales por mes
             // $sql2 =    "SELECT COUNT(  `mac` ) AS  'Conexiones_totales', DATE_FORMAT(  `fecha_actividad` ,  '%M-%Y' ) AS  'Mes'
-            //         FROM  `actividad_portales` 
+            //         FROM  `actividad_portales`
             //         WHERE  `id_cliente` = ".$id_cliente.
-            //         " AND DATE_FORMAT(  `fecha_actividad` ,  '%m-%d-%Y' ) 
-            //         BETWEEN DATE_FORMAT( NOW( ) - INTERVAL 7 MONTH ,  '%m-%Y' ) 
-            //         AND DATE_FORMAT( NOW( ) - INTERVAL 1 MONTH ,  '%m-%Y' ) 
+            //         " AND DATE_FORMAT(  `fecha_actividad` ,  '%m-%d-%Y' )
+            //         BETWEEN DATE_FORMAT( NOW( ) - INTERVAL 7 MONTH ,  '%m-%Y' )
+            //         AND DATE_FORMAT( NOW( ) - INTERVAL 1 MONTH ,  '%m-%Y' )
             //         GROUP BY DATE_FORMAT(  `fecha_actividad` ,  '%m-%Y' )";
 
 
             //cantidad de conexiones totales por mes
         $sql2 = "select count(*) AS  'Conexiones_totales', mes as 'Mes' from (SELECT mac, date_format(`fecha_actividad`,'%m-%Y') as mes
         FROM `actividad_portales`
-        WHERE `id_cliente` = ".$id_cliente." 
+        WHERE `id_cliente` = ".$id_cliente."
         AND date_format(`fecha_actividad`,'%Y-%m') BETWEEN DATE_FORMAT( NOW( ) - INTERVAL 7 MONTH ,  '%Y-%m' ) AND DATE_FORMAT( NOW( ) - INTERVAL 1 MONTH ,  '%Y-%m' )
         group by mac, date_format(`fecha_actividad`,'%Y-%m-%d')
         order by mac) t
@@ -687,27 +687,27 @@ public function getdispmasconect(){
 
 
         $sql= "SELECT `tipo_dispositivo`, COUNT( * ) as 'Conexiones'
-        FROM (SELECT `tipo_dispositivo` 
-        FROM `actividad_portales` 
+        FROM (SELECT `tipo_dispositivo`
+        FROM `actividad_portales`
         WHERE `id_cliente`= ".$id_cliente."
-        group by mac) as t 
+        group by mac) as t
         group by `tipo_dispositivo`";
 
-            // $sql1 = "SELECT COUNT(*) as 'Conexiones_Totales' 
-            //         FROM `actividad_portales` 
+            // $sql1 = "SELECT COUNT(*) as 'Conexiones_Totales'
+            //         FROM `actividad_portales`
             //         WHERE `id_cliente` = ".$id_cliente;
 
         $sql1 = "SELECT sum(EM) as 'Conexiones_Totales'
         FROM (
         SELECT `tipo_dispositivo`, count(*) AS EM
-        FROM (SELECT `tipo_dispositivo` 
-        FROM `actividad_portales` 
-        WHERE `id_cliente` = ".$id_cliente." 
-        group by mac) as t 
+        FROM (SELECT `tipo_dispositivo`
+        FROM `actividad_portales`
+        WHERE `id_cliente` = ".$id_cliente."
+        group by mac) as t
         group by `tipo_dispositivo`) AS X ";
 
-        $results = DB::select($sql); 
-        $results1 = DB::select($sql1); 
+        $results = DB::select($sql);
+        $results1 = DB::select($sql1);
 
         $porcentajes = array();
 
@@ -728,7 +728,7 @@ public function getdispmasconect(){
                 $porcentajes[$i][1] = (float) $porcentajes[$i][1] * 100;
                 $porcentajes[$i][1] = round($porcentajes[$i][1], 2);
                 $i++;
-                
+
             }else
 
             if ($res->tipo_dispositivo == "RIM") {

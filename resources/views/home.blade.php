@@ -18,7 +18,7 @@ Home
 					<img src="img/admin.jpg" alt="..." class="img-rounded center-block img-responsive">
 				</div>
 			</div>
-			@if( Auth::user()->id_usuario_web == '1' or Auth::user()->id_usuario_web == '10')
+			<!-- @if( Auth::user()->id_usuario_web == '1' or Auth::user()->id_usuario_web == '10') -->
 				<div class="box-footer">
 					<div class="col-md-3">
 							<div class="info-box">
@@ -30,7 +30,7 @@ Home
 					    	</div>
 					</div>
 				</div>
-			@endif
+			<!-- @endif -->
 			</div>
 
 		</div>
@@ -44,7 +44,7 @@ Home
 		});
 		$(document).ready(function(){
 
-			
+
 			$('#SelectModal').modal({
 				backdrop: 'static'
 			});
@@ -58,7 +58,7 @@ Home
 				$('#SelectModal').modal('hide');
 			}
 
-			
+
 		});
 
 	</script>

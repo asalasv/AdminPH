@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Cliente;
 use App\Portal;
-use Auth; 
+use Auth;
 use Illuminate\Support\Facades\Session;
 
 use App\Http\Requests;
@@ -51,7 +51,7 @@ class ClientesController extends Controller
             //$logo = base64_encode($cliente->logo);
             //$logo = 'data:image/png;base64,'.$logo;
 
-            Session::put('client.logo',$cliente->logo);   
+            Session::put('client.logo',$cliente->logo);
         }
 
 
@@ -60,7 +60,7 @@ class ClientesController extends Controller
         Session::put('activo','1');
 
         return Session::get('client.logo');
-    }   
+    }
 
     public function imglogo()
     {
@@ -77,8 +77,8 @@ class ClientesController extends Controller
         //$logo = 'data:image/png;base64,'.$logo;
 
         if($cliente->logo)
-            Session::put('client.logo',$cliente->logo);   
- 
+            Session::put('client.logo',$cliente->logo);
+
         //return view('cliente/logo',compact('logo','clientes'));
 
         return view('cliente/logo',compact('cliente','clientes'));
@@ -92,7 +92,7 @@ class ClientesController extends Controller
         $cliente = Cliente::findOrFail($id_cliente);
 
         foreach ($request->only('logo') as $logo) {
-        
+
             if($logo){
 
                 $ext = $logo->getClientOriginalExtension();
@@ -109,8 +109,8 @@ class ClientesController extends Controller
                 // $image = fread($fp, filesize($logo->getRealPath()));
                 // $image = addslashes($image);
                 // fclose($fp);
-                // $sql = "UPDATE clientes 
-                //         SET logo = '".$image."' 
+                // $sql = "UPDATE clientes
+                //         SET logo = '".$image."'
                 //         WHERE  id_cliente = ".$id_cliente;
                 // $result = \DB::statement($sql);
 
@@ -120,6 +120,16 @@ class ClientesController extends Controller
         }
 
          return redirect('cliente/logo');
+    }
+
+    public function verifyemail($email){
+
+        $usuario = Usuarios_ph::where('email', '=', $email);
+
+        if($usuario->first()){
+            return 'true';
+        }
+        return 'false';
     }
 
 

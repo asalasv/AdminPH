@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Cliente;
+use App\Sector;
+use Response;
+use App\Tipo_cliente;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -75,6 +78,17 @@ class AuthController extends Controller
             'email' => 'required|email|unique:usuarios_web|max:255',
             'password' => 'required|confirmed|min:3',
             'cliente' => 'required|exists:clientes,alias',
+            'nombre' => 'required',
+            'rif' => 'required',
+            'direccion' => 'required',
+            'representante' => 'required',
+            'email_representante' => 'required|email',
+            'telefono' => 'required',
+            'telefono_representante' => 'required',
+            'ssid_wifi' => 'required',
+            'password_portal' => 'required',
+            'fecha_activacion' => 'required|date|after:tomorrow',
+            // 'g-recaptcha-response' => 'required|captcha',
         ]);
     }
 
@@ -86,6 +100,7 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
+
         $user = User::create([
             'username' => $data['username'],
             'email' => $data['email'],
@@ -93,7 +108,7 @@ class AuthController extends Controller
         ]);
 
         Mail::send('auth.emails.userdata', ['user' => $user, 'pass' => $data['password']], function ($message) use ($user) {
-            $message->from('alosalasv@gmail.com', 'PortalHook');
+            $message->from('no-reply@portalhook.com', 'PortalHook');
 
             $message->to($user->email, $user->name)->subject('Confirmacion Cliente PortalHook');
         });
@@ -104,8 +119,68 @@ class AuthController extends Controller
 
         $cliente->id_usuario_web = $user->id_usuario_web;
 
+        $cliente->nombre = $data['nombre'];
+        $cliente->tax_number = $data['rif'];
+        $cliente->direccion = $data['direccion'];
+        $cliente->representante = $data['representante'];
+        $cliente->email_rep = $data['email_representante'];
+        $cliente->telefono = $data['telefono'];
+        $cliente->telefono_rep = $data['telefono_representante'];
+        $cliente->ssid_wifi = $data['ssid_wifi'];
+        $cliente->password = $data['password_portal'];
+        $cliente->id_tipo_cliente = $data['tipo'];
+        $cliente->id_sector = $data['sector'];
+        $cliente->fecha_activacion = $data['fecha_activacion'];
+        $cliente->tipo_contrato = $data['tipo_contrato'];
+
         $cliente->save();
 
         return $user;
     }
+
+    public function showRegistrationForm()
+    {
+        if (property_exists($this, 'registerView')) {
+            return view($this->registerView);
+        }
+
+        $sectores = Sector::all();
+
+        $tipo_clientes = Tipo_cliente::all();
+
+        return view('auth.register',compact('sectores','tipo_clientes'));
+    }
+
+    public function getPremium()
+    {
+      $filename = 'test.pdf';
+      $path = $filename;
+
+      return Response::make(file_get_contents($path), 200, [
+          'Content-Type' => 'application/pdf',
+          'Content-Disposition' => 'inline; filename="'.$filename.'"'
+      ]);
+    }
+
+    public function getBasic()
+    {
+      $filename = 'test.pdf';
+      $path = $filename;
+
+      return Response::make(file_get_contents($path), 200, [
+          'Content-Type' => 'application/pdf',
+          'Content-Disposition' => 'inline; filename="'.$filename.'"'
+      ]);
+    }
+
+    public function verifyusername($user){
+
+        $usuario = User::where('username', '=', $user);
+
+        if($usuario->first()){
+            return 'true';
+        }
+        return 'false';
+    }
+
 }

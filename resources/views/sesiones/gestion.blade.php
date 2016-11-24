@@ -113,7 +113,7 @@ Home
 		</div>
 	</div>
 </div>
-	{!! Form::open(['route' => ['bloqueodesbloqueo', ':mac', ':act', ':descr'], 'method' =>'post', 'id' => 'form-bloqueodesbloqueo']) !!}
+	{!! Form::open(['route' => ['bloqueodesbloqueo', ':mac', ':act', ':descr', ':orden'], 'method' =>'post', 'id' => 'form-bloqueodesbloqueo']) !!}
 	{!!Form::close() !!}
 
 	{!! Form::open(['route' => ['desblock', ':mac', ':orden'], 'method' =>'post', 'id' => 'form-desblock']) !!}
@@ -132,12 +132,12 @@ Home
 			alert(' Parece que el cliente remoto no posee internet en estos momentos... Por favor intente mas tarde.');
 
 		$(document).ajaxStart(function () {
-			var current_effect = 'bounce'; 
+			var current_effect = 'bounce';
 			run_waitMe(current_effect);
 		})
 
 		$(function(){
-			$('#menu-sesiones').addClass('active');  
+			$('#menu-sesiones').addClass('active');
 		});
 
 		$('#macblock').on('hidden.bs.modal', function (e) {
@@ -201,7 +201,7 @@ Home
 					var verbo = 'desbloquear';
 					var url = url.replace(':act', 'pass');
 				}
-				
+
 				var data = form.serialize();
 
 				if(confirm('¿Está seguro que desea '+verbo+' esta mac?')){
@@ -212,13 +212,13 @@ Home
 						success: function(data){
 							window.location.reload();
 						}
-					});	
+					});
 				}
-			}	
+			}
 		});
 
 		$('#action2').click(function(){
-			
+
 			var mac =  $('#mac1').val()
 			var descr =  $('#descr1').val();
 
@@ -251,8 +251,8 @@ Home
 							//console.log(data);
 							window.location.reload();
 						}
-					});	
-				}	
+					});
+				}
 			}
 		});
 
@@ -288,8 +288,8 @@ Home
 						//console.log(data);
 						window.location.reload();
 					}
-				});	
-			}	
+				});
+			}
 			}
 		});
 
@@ -312,16 +312,16 @@ Home
 					success: function(data){
 						window.location.reload();
 					}
-				});	
+				});
 			}
-			
+
 		});
 
 		function run_waitMe(effect){
 			$("body").waitMe({
 
-				//none, rotateplane, stretch, orbit, roundBounce, win8, 
-				//win8_linear, ios, facebook, rotation, timer, pulse, 
+				//none, rotateplane, stretch, orbit, roundBounce, win8,
+				//win8_linear, ios, facebook, rotation, timer, pulse,
 				//progressBar, bouncePulse or img
 				effect: 'bounce',
 
